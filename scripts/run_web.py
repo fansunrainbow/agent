@@ -4,6 +4,8 @@ import argparse
 from pathlib import Path
 import sys
 
+from dotenv import load_dotenv
+
 ROOT = Path(__file__).resolve().parents[1]
 LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1"}
 if str(ROOT) not in sys.path:
@@ -23,6 +25,7 @@ def main() -> None:
         raise SystemExit(
             "Refusing non-loopback bind without --allow-remote: the competition demo API has no user authentication."
         )
+    load_dotenv(ROOT / ".env", override=False)
     import uvicorn
     uvicorn.run("webapp.api:app", host=args.host, port=args.port, reload=False)
 
