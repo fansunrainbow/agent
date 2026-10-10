@@ -1,0 +1,55 @@
+{
+  "case_id": "X007",
+  "category": "Coverage",
+  "description": "覆盖 month 维度",
+  "input": "查看2026年各月总资产变化。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "trend_analysis",
+    "subject": "customer",
+    "metrics": [
+      "total_asset"
+    ],
+    "dimensions": [
+      "month"
+    ],
+    "filters": [],
+    "entities": [],
+    "time_range": {
+      "type": "year",
+      "year": 2026
+    },
+    "group_by": [
+      "month"
+    ],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "aggregate",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

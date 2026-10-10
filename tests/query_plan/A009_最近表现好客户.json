@@ -1,0 +1,69 @@
+{
+  "case_id": "A009",
+  "category": "Ambiguous",
+  "description": "最近表现好客户",
+  "input": "最近表现好客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "最近",
+        "type": "time",
+        "reason": "未指定时间范围",
+        "question": "请确认最近范围",
+        "candidates": [
+          "last_7_days",
+          "last_30_days",
+          "last_3_months"
+        ]
+      },
+      {
+        "term": "表现好",
+        "type": "business_rule",
+        "reason": "未指定评价指标",
+        "question": "请确认评价指标",
+        "candidates": [
+          "asset_change",
+          "asset_profit",
+          "trade_amount"
+        ]
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 0.95,
+      "metrics": 0.6,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 0.6
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

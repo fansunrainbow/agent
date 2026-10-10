@@ -1,0 +1,27 @@
+{
+  "policy": "controlled_external_competition_data",
+  "description": "These customer fact files are required only to rebuild the Real DB benchmark database. They are intentionally not redistributed in the submission package. Obtain them through the approved competition data channel and place them in the project root before import.",
+  "files": [
+    {
+      "name": "dws_cust_aset_d_202606021051.csv",
+      "size_bytes": 2807584,
+      "sha256": "EA9C3006DF6408F00D1E26F513B3FCBCD5A9D40939C3780E61684175850C7826"
+    },
+    {
+      "name": "dws_cust_fin_d_202606021050.csv",
+      "size_bytes": 367929,
+      "sha256": "8D67C2CFD262D4E715B00E5FE8FFDA2A47EAF446A46760E59CC2D8AAA6B26ADD"
+    },
+    {
+      "name": "dwd_cust_tran_d_202606021051.csv",
+      "size_bytes": 4581163,
+      "sha256": "1516CC522CA9D5C775ADF375F612D00B899F4CB9D361CA382C5C15FA1502386F"
+    },
+    {
+      "name": "dwd_cust_hold_d_202606021051.csv",
+      "size_bytes": 28128640,
+      "sha256": "74FC2803D08FD211B6B064DF3A16CABDE2D28E0B2DB67A9E63CCB7190E80BD05"
+    }
+  ]
+}
+

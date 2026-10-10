@@ -1,0 +1,70 @@
+{
+  "case_id": "E007",
+  "category": "Entity",
+  "description": "宁德时代持仓客户",
+  "input": "宁德时代持仓客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "entity",
+        "target": "held_product",
+        "operator": "exists",
+        "source": "entity_resolution",
+        "confidence": 1.0,
+        "value": "P_CATL"
+      }
+    ],
+    "entities": [
+      {
+        "entity_type": "product",
+        "surface": "宁德时代",
+        "resolution_status": "resolved",
+        "resolved": {
+          "id": "P_CATL",
+          "name": "宁德时代",
+          "entity_type": "product",
+          "attributes": {}
+        },
+        "confidence": 0.98,
+        "source": "exact_match"
+      }
+    ],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

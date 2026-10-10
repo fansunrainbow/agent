@@ -1,0 +1,55 @@
+segments:
+  high_asset_low_fund:
+    name: 高资产低基金配置客户
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    defaults: {asset_threshold: 1000000, fund_ratio_threshold: 0.1}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: average_total_asset, operator: gte, parameter: asset_threshold}
+        - {feature: fund_holding_ratio, operator: lt, parameter: fund_ratio_threshold}
+  high_level_outflow_decline:
+    name: 高等级净流出且资产下降客户
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    defaults: {high_level_values: ["1000001", "1000002"], outflow_threshold: 0, decline_threshold: 0}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: customer_level, operator: in, parameter: high_level_values}
+        - {feature: net_inflow, operator: lt, parameter: outflow_threshold}
+        - {feature: asset_change_rate, operator: lt, parameter: decline_threshold}
+  fund_low_allocation:
+    name: 基金低配置客群
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {fund_ratio_threshold: 0.1}
+    condition: {feature: fund_holding_ratio, operator: lt, parameter: fund_ratio_threshold}
+  positive_flow_or_growth:
+    name: 净流入或资产增长客户
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {flow_threshold: 0, growth_threshold: 0}
+    condition:
+      logic: OR
+      conditions:
+        - {feature: net_inflow, operator: gt, parameter: flow_threshold}
+        - {feature: asset_change_rate, operator: gt, parameter: growth_threshold}
+  active_non_outflow:
+    name: 活跃且非净流出客户
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {trade_threshold: 20, flow_threshold: 0}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: trade_count, operator: gte, parameter: trade_threshold}
+        - logic: NOT
+          conditions:
+            - {feature: net_inflow, operator: lt, parameter: flow_threshold}

@@ -1,0 +1,219 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "time_range.schema.json",
+  "title": "Time Range Schema",
+  "description": "Generic Query Plan 的统一时间语义结构。",
+  "oneOf": [
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "absolute_date"
+        },
+        "date": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "type",
+        "date"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "date_range"
+        },
+        "start": {
+          "type": "string",
+          "format": "date"
+        },
+        "end": {
+          "type": "string",
+          "format": "date"
+        }
+      },
+      "required": [
+        "type",
+        "start",
+        "end"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "month"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 2100
+        },
+        "month": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 12
+        }
+      },
+      "required": [
+        "type",
+        "year",
+        "month"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "quarter"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 2100
+        },
+        "quarter": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 4
+        }
+      },
+      "required": [
+        "type",
+        "year",
+        "quarter"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "year"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 2100
+        }
+      },
+      "required": [
+        "type",
+        "year"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "ytd"
+        },
+        "year": {
+          "type": "integer",
+          "minimum": 2000,
+          "maximum": 2100
+        }
+      },
+      "required": [
+        "type",
+        "year"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "last_n_days"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "type",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "last_n_months"
+        },
+        "n": {
+          "type": "integer",
+          "minimum": 1
+        }
+      },
+      "required": [
+        "type",
+        "n"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "latest"
+        }
+      },
+      "required": [
+        "type"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "start_of_period"
+        },
+        "period": {
+          "$ref": "#"
+        }
+      },
+      "required": [
+        "type",
+        "period"
+      ],
+      "additionalProperties": false
+    },
+
+    {
+      "type": "object",
+      "properties": {
+        "type": {
+          "const": "end_of_period"
+        },
+        "period": {
+          "$ref": "#"
+        }
+      },
+      "required": [
+        "type",
+        "period"
+      ],
+      "additionalProperties": false
+    }
+  ]
+}

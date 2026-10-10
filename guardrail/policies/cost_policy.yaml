@@ -1,0 +1,6 @@
+max_joins: 8
+max_result_rows: 10000
+default_detail_limit: 1000
+max_estimated_scan_rows: 1000000
+require_time_filter_for_fact_tables: true
+max_execution_time_seconds: 30

@@ -1,0 +1,752 @@
+dictionary:
+
+  diamond_customer:
+    name: 钻石客户
+    category: enum
+    dimension: customer_level
+
+    source:
+      table: ads_cust_info_d
+      field: cust_lvl_cd
+
+    value_mapping:
+      - "1000001"
+
+    aliases:
+      - 钻石客户
+      - 钻石卡客户
+      - 紫金钻石客户
+      - 紫金理财钻石卡客户
+
+    explain:
+      text: >
+        钻石客户指客户等级代码为 1000001，
+        即“紫金理财钻石卡客户”的客户。
+      source: database_dictionary
+
+
+  platinum_customer:
+    name: 白金客户
+    category: enum
+    dimension: customer_level
+
+    source:
+      table: ads_cust_info_d
+      field: cust_lvl_cd
+
+    value_mapping:
+      - "1000002"
+
+    aliases:
+      - 白金客户
+      - 白金卡客户
+      - 紫金白金客户
+      - 紫金理财白金卡客户
+
+    explain:
+      text: >
+        白金客户指客户等级代码为 1000002，
+        即“紫金理财白金卡客户”的客户。
+      source: database_dictionary
+
+
+  gold_customer:
+    name: 金卡客户
+    category: enum
+    dimension: customer_level
+
+    source:
+      table: ads_cust_info_d
+      field: cust_lvl_cd
+
+    value_mapping:
+      - "1000003"
+
+    aliases:
+      - 金卡客户
+      - 金卡
+      - 紫金金卡客户
+      - 紫金理财金卡客户
+
+    explain:
+      text: >
+        金卡客户指客户等级代码为 1000003，
+        即“紫金理财金卡客户”的客户。
+      source: database_dictionary
+
+
+  male_customer:
+    name: 男性客户
+    category: enum
+    dimension: gender
+
+    source:
+      table: ads_cust_info_d
+      field: gender_cd
+
+    value_mapping:
+      - "5000002"
+
+    aliases:
+      - 男
+      - 男性
+      - 男客户
+      - 男性客户
+
+    explain:
+      text: >
+        男性客户指性别代码为 5000002，
+        对应数据库字典中的“男”。
+      source: database_dictionary
+
+
+  female_customer:
+    name: 女性客户
+    category: enum
+    dimension: gender
+
+    source:
+      table: ads_cust_info_d
+      field: gender_cd
+
+    value_mapping:
+      - "5000003"
+
+    aliases:
+      - 女
+      - 女性
+      - 女客户
+      - 女性客户
+
+    explain:
+      text: >
+        女性客户指性别代码为 5000003，
+        对应数据库字典中的“女”。
+      source: database_dictionary
+
+
+  bachelor_or_above:
+    name: 本科及以上
+    category: hierarchy
+    dimension: education
+
+    source:
+      table: ads_cust_info_d
+      field: edu_cd
+
+    includes:
+      - code: "6000004"
+        value: 学士
+      - code: "6000003"
+        value: 硕士
+      - code: "6000002"
+        value: 博士
+
+    aliases:
+      - 本科及以上
+      - 本科以上
+      - 学士及以上
+      - 学士以上
+      - 本科及以上学历
+
+    explain:
+      text: >
+        本科及以上包含学士、硕士和博士三个学历层级，
+        对应代码 6000004、6000003、6000002。
+      source: database_dictionary
+
+
+  stock_product:
+    name: 股票
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 股票
+
+    aliases:
+      - 股票
+      - 股票产品
+      - 股票类产品
+
+    explain:
+      text: >
+        股票概念映射到 dim_product.up_prdt_type_name = '股票'。
+        由于产品分类 ID 存在一对多名称情况，
+        当前按产品一级分类名称过滤。
+      source: validated_product_dictionary
+
+
+  fund_product:
+    name: 基金
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 开放式基金
+
+    aliases:
+      - 基金
+      - 开放式基金
+      - 基金产品
+      - 基金类产品
+
+    explain:
+      text: >
+        基金概念当前映射到一级产品分类“开放式基金”。
+      source: validated_product_dictionary
+
+
+  normal_account:
+    name: 普通账户
+    category: enum
+    dimension: account_source
+
+    source:
+      fields:
+        - dwd_cust_hold_d.sys_source
+        - dwd_cust_tran_d.sys_source
+        - dws_cust_fin_d.sys_source
+
+    values:
+      - nm
+
+    aliases:
+      - 普通账户
+      - 普通账号
+      - 普通证券账户
+
+    explain:
+      text: >
+        普通账户对应 sys_source = 'nm'。
+      source: validated_database_value
+
+
+  credit_account:
+    name: 信用账户
+    category: enum
+    dimension: account_source
+
+    source:
+      fields:
+        - dwd_cust_hold_d.sys_source
+        - dwd_cust_tran_d.sys_source
+        - dws_cust_fin_d.sys_source
+
+    values:
+      - fc
+
+    aliases:
+      - 信用账户
+      - 信用账号
+      - 融资融券账户
+
+    explain:
+      text: >
+        信用账户对应 sys_source = 'fc'。
+      source: validated_database_value
+
+
+  silver_customer:
+    name: 银卡客户
+    category: enum
+    dimension: customer_level
+
+    source:
+      table: ads_cust_info_d
+      field: cust_lvl_cd
+
+    value_mapping:
+      - "1000004"
+
+    aliases:
+      - 银卡客户
+      - 银卡
+      - 紫金银卡客户
+      - 紫金理财银卡客户
+
+    explain:
+      text: >
+        银卡客户指客户等级代码为 1000004，
+        即“紫金理财银卡客户”的客户。
+      source: database_dictionary
+
+
+  standard_customer:
+    name: 紫金理财卡客户
+    category: enum
+    dimension: customer_level
+
+    source:
+      table: ads_cust_info_d
+      field: cust_lvl_cd
+
+    value_mapping:
+      - "1000005"
+
+    aliases:
+      - 紫金理财卡客户
+      - 普通理财卡客户
+      - 理财卡客户
+
+    explain:
+      text: >
+        紫金理财卡客户指客户等级代码为 1000005。
+      source: database_dictionary
+
+
+  normal_customer:
+    name: 正常客户
+    category: enum
+    dimension: customer_status
+
+    source:
+      table: ads_cust_info_d
+      field: cust_status
+
+    value_mapping:
+      - "2000001"
+
+    aliases:
+      - 正常客户
+      - 正常状态客户
+      - 正常
+
+    explain:
+      text: >
+        正常客户指客户状态代码为 2000001，
+        对应数据库字典中的“正常”。
+      source: database_dictionary
+
+
+  closed_customer:
+    name: 销户客户
+    category: enum
+    dimension: customer_status
+
+    source:
+      table: ads_cust_info_d
+      field: cust_status
+
+    value_mapping:
+      - "2000004"
+
+    aliases:
+      - 销户客户
+      - 已销户客户
+      - 销户
+
+    explain:
+      text: >
+        销户客户指客户状态代码为 2000004。
+      source: database_dictionary
+
+
+  dormant_customer:
+    name: 休眠客户
+    category: enum
+    dimension: customer_status
+
+    source:
+      table: ads_cust_info_d
+      field: cust_status
+
+    value_mapping:
+      - "2000005"
+
+    aliases:
+      - 休眠客户
+      - 休眠已确认客户
+      - 休眠已确认
+
+    explain:
+      text: >
+        休眠客户指客户状态代码为 2000005。
+      source: database_dictionary
+
+
+  bond_product:
+    name: 债券
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 债券
+
+    aliases:
+      - 债券
+      - 债券产品
+      - 债券类产品
+
+    explain:
+      text: >
+        债券概念映射到 dim_product.up_prdt_type_name = '债券'。
+      source: validated_product_dictionary
+
+
+  wealth_management_product:
+    name: 理财产品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 理财产品
+
+    aliases:
+      - 理财
+      - 理财产品
+      - 理财类产品
+
+    explain:
+      text: >
+        理财产品概念映射到一级产品分类“理财产品”。
+      source: validated_product_dictionary
+
+
+  private_fund_product:
+    name: 私募
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 证券投资类私募
+
+    aliases:
+      - 私募
+      - 私募基金
+      - 证券投资类私募
+      - 私募产品
+
+    explain:
+      text: >
+        私募概念当前映射到一级产品分类“证券投资类私募”。
+      source: validated_product_dictionary
+
+
+  warrant_product:
+    name: 权证
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 权证
+
+    aliases:
+      - 权证
+      - 权证产品
+
+    explain:
+      text: >
+        权证概念映射到一级产品分类“权证”。
+      source: validated_product_dictionary
+
+
+  derivative_product:
+    name: 衍生品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 衍生品
+
+    aliases:
+      - 衍生品
+      - 衍生产品
+
+    explain:
+      text: >
+        衍生品概念映射到一级产品分类“衍生品”。
+      source: validated_product_dictionary
+
+
+  otc_product:
+    name: OTC产品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - OTC产品
+
+    aliases:
+      - OTC
+      - OTC产品
+      - 场外产品
+
+    explain:
+      text: >
+        OTC产品概念映射到一级产品分类“OTC产品”。
+      source: validated_product_dictionary
+
+
+  province_dimension:
+    name: 省份
+    category: dimension
+    dimension: province
+
+    source:
+      table: ads_cust_info_d
+      field: prov_name
+
+    aliases:
+      - 省份
+      - 所在省份
+      - 客户省份
+
+    explain:
+      text: >
+        省份表示客户当前快照中的省级地域属性。
+      source: data_model
+
+
+  city_dimension:
+    name: 城市
+    category: dimension
+    dimension: city
+
+    source:
+      table: ads_cust_info_d
+      field: city_name
+
+    aliases:
+      - 城市
+      - 所在城市
+      - 客户城市
+
+    explain:
+      text: >
+        城市表示客户当前快照中的城市属性。
+      source: data_model
+
+
+  branch_dimension:
+    name: 营业部
+    category: dimension
+    dimension: branch
+
+    source:
+      table: dim_branch
+      field: org_id
+      display_field: org_name
+
+    aliases:
+      - 营业部
+      - 所属营业部
+      - 客户营业部
+
+    explain:
+      text: >
+        营业部表示客户所属营业机构。
+      source: data_model
+
+
+  parent_branch_dimension:
+    name: 分公司
+    category: dimension
+    dimension: parent_branch
+
+    source:
+      table: dim_branch
+      field: up_org_id
+      display_field: up_org_name
+
+    aliases:
+      - 分公司
+      - 上级机构
+      - 上级营业部
+
+    explain:
+      text: >
+        分公司概念映射到营业部维表中的上级机构。
+      source: data_model
+
+  repo_product:
+    name: 回购产品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 回购一级类别
+
+    aliases:
+      - 回购
+      - 回购产品
+      - 回购类产品
+
+    explain:
+      text: >
+        回购产品当前映射到一级产品分类“回购一级类别”。
+      source: validated_product_dictionary
+
+
+  cash_product:
+    name: 现金类产品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 现金类
+
+    aliases:
+      - 现金类
+      - 现金类产品
+      - 现金产品
+
+    explain:
+      text: >
+        现金类产品映射到一级产品分类“现金类”。
+      source: validated_product_dictionary
+
+
+  precious_metal_product:
+    name: 贵金属产品
+    category: enum
+    dimension: product_primary_category
+
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+
+    values:
+      - 贵金属
+
+    aliases:
+      - 贵金属
+      - 贵金属产品
+
+    explain:
+      text: >
+        贵金属产品映射到一级产品分类“贵金属”。
+      source: validated_product_dictionary
+
+
+  a_share_product:
+    name: A股
+    category: enum
+    dimension: product_secondary_category
+
+    source:
+      table: dim_product
+      field: prdt_type_name
+
+    values:
+      - A股
+
+    aliases:
+      - A股
+      - A股股票
+      - A股产品
+
+    explain:
+      text: >
+        A股概念映射到 dim_product.prdt_type_name = 'A股'。
+      source: validated_product_dictionary
+
+
+  product_entity:
+    name: 产品实体
+    category: entity
+
+    source:
+      table: dim_product
+
+    aliases:
+      - 产品
+      - 产品名称
+      - 证券产品
+
+    entity_resolution:
+      required: true
+      rule_reference: product
+
+    explain:
+      text: >
+        招商银行、比亚迪、中国平安等具体产品名称属于产品实体，
+        不在词典中硬编码产品ID，而由实体检索规则解析。
+      source: entity_resolution_rule
+
+
+  branch_entity:
+    name: 营业部实体
+    category: entity
+
+    source:
+      table: dim_branch
+
+    aliases:
+      - 某营业部
+      - 营业部名称
+      - 具体营业部
+
+    entity_resolution:
+      required: true
+      rule_reference: branch
+
+    explain:
+      text: >
+        具体营业部名称通过 dim_branch 实体检索解析，
+        不在业务词典中枚举所有营业部。
+      source: entity_resolution_rule
+
+
+  customer_entity:
+    name: 客户实体
+    category: entity
+
+    source:
+      table: ads_cust_info_d
+      field: pty_id
+
+    aliases:
+      - 客户号
+      - 客户ID
+      - 指定客户
+
+    entity_resolution:
+      required: true
+      rule_reference: customer
+
+    explain:
+      text: >
+        指定客户通过客户标识 pty_id 解析，
+        不在业务词典中枚举全部客户。
+      source: entity_resolution_rule

@@ -1,0 +1,64 @@
+{
+  "case_id": "T001",
+  "category": "Multi-turn",
+  "description": "多轮上下文T001",
+  "input": "多轮对话测试T001",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "metric_query",
+    "subject": "customer",
+    "metrics": [
+      "average_total_asset"
+    ],
+    "dimensions": [
+      "city"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "dimension",
+        "target": "city",
+        "operator": "eq",
+        "value": "南京",
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

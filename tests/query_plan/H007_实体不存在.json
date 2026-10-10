@@ -1,0 +1,54 @@
+{
+  "case_id": "H007",
+  "category": "Invalid/Hallucination",
+  "description": "实体不存在",
+  "input": "查询不存在产品XYZ。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [],
+    "entities": [
+      {
+        "entity_type": "product",
+        "surface": "不存在产品XYZ",
+        "resolution_status": "not_found"
+      }
+    ],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "summary",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": false,
+    "error_codes": [
+      "UNRESOLVED_ENTITY"
+    ]
+  }
+}

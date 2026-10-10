@@ -1,0 +1,29 @@
+domains:
+
+  customer:
+    name: 客户指标
+    description: 客户规模、年龄、等级、地域等客户基础统计指标
+
+  asset:
+    name: 资产指标
+    description: 客户账户资产、现金资产、日均资产及资产变化相关指标
+
+  holding:
+    name: 持仓指标
+    description: 客户产品持仓、市值及持仓结构相关指标
+
+  trading:
+    name: 交易指标
+    description: 客户买入、卖出、成交金额、交易次数及活跃度相关指标
+
+  fund_flow:
+    name: 资金流指标
+    description: 客户资金转入、转出及净流入相关指标
+
+  allocation:
+    name: 产品配置指标
+    description: 股票、基金、债券、理财等产品配置比例相关指标
+
+  marketing:
+    name: 经营客群指标
+    description: 基于标准指标组合形成的客户经营与营销筛选指标

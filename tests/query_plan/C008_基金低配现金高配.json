@@ -1,0 +1,68 @@
+{
+  "case_id": "C008",
+  "category": "Complex",
+  "description": "基金低配现金高配",
+  "input": "查询基金配置低于10%且现金占比高于50%的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "fund_holding_ratio",
+      "cash_asset_ratio"
+    ],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "metric",
+        "target": "fund_holding_ratio",
+        "operator": "lt",
+        "value": 0.1,
+        "source": "explicit",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "metric",
+        "target": "cash_asset_ratio",
+        "operator": "gt",
+        "value": 0.5,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

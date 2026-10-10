@@ -1,0 +1,52 @@
+{
+  "case_id": "MX103",
+  "category": "Metric-Coverage",
+  "description": "补充 Metric Coverage: bond_holding_value",
+  "input": "查询标准指标 bond_holding_value。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "metric_query",
+    "subject": "customer",
+    "metrics": [
+      "bond_holding_value"
+    ],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "summary",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

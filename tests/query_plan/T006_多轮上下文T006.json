@@ -1,0 +1,64 @@
+{
+  "case_id": "T006",
+  "category": "Multi-turn",
+  "description": "多轮上下文T006",
+  "input": "多轮对话测试T006",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "metric_query",
+    "subject": "customer",
+    "metrics": [
+      "customer_count"
+    ],
+    "dimensions": [
+      "gender"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "concept",
+        "target": "female_customer",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": "plan_T005",
+      "operation": "modify"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

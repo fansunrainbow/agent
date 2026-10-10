@@ -1,0 +1,74 @@
+{
+  "case_id": "T009",
+  "category": "Multi-turn",
+  "description": "多轮上下文T009",
+  "input": "多轮对话测试T009",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "comparison",
+    "subject": "customer",
+    "metrics": [
+      "customer_count"
+    ],
+    "dimensions": [
+      "city"
+    ],
+    "filters": [
+      {
+        "logic": "or",
+        "conditions": [
+          {
+            "id": "f1",
+            "type": "dimension",
+            "target": "city",
+            "operator": "eq",
+            "value": "南京",
+            "source": "explicit",
+            "confidence": 1.0
+          },
+          {
+            "id": "f2",
+            "type": "dimension",
+            "target": "city",
+            "operator": "eq",
+            "value": "苏州",
+            "source": "explicit",
+            "confidence": 1.0
+          }
+        ]
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "aggregate",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": "plan_T008",
+      "operation": "compare"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

@@ -1,0 +1,14 @@
+subjects:
+  customer: {table: ads_cust_info_d, key: pty_id}
+  product: {table: dim_product, key: prdt_id}
+  branch: {table: dim_branch, key: org_id}
+  transaction: {table: dwd_cust_tran_d, key: pty_id}
+  holding: {table: dwd_cust_hold_d, key: pty_id}
+table_keys:
+  ads_cust_info_d: pty_id
+  dws_cust_aset_d: pty_id
+  dws_cust_fin_d: pty_id
+  dwd_cust_tran_d: pty_id
+  dwd_cust_hold_d: pty_id
+  dim_product: prdt_id
+  dim_branch: org_id

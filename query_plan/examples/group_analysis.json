@@ -1,0 +1,56 @@
+{
+  "version": "1.0",
+  "status": "ready",
+  "intent": "group_analysis",
+  "subject": "customer",
+
+  "metrics": [
+    "customer_count"
+  ],
+
+  "dimensions": [
+    "customer_level"
+  ],
+
+  "filters": [],
+
+  "entities": [],
+
+  "time_range": null,
+
+  "group_by": [
+    "customer_level"
+  ],
+
+  "having": [],
+
+  "order_by": [],
+
+  "limit": null,
+
+  "output": {
+    "mode": "aggregate",
+    "format": "table",
+    "include_details": false,
+    "include_explanation": true
+  },
+
+  "ambiguities": [],
+
+  "assumptions": [],
+
+  "confidence": {
+    "overall": 1.0,
+    "intent": 1.0,
+    "metrics": 1.0,
+    "dimensions": 1.0,
+    "entities": 1.0,
+    "time": 1.0,
+    "filters": 1.0
+  },
+
+  "context": {
+    "parent_plan_id": null,
+    "operation": "new"
+  }
+}

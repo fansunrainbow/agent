@@ -1,0 +1,33 @@
+{
+  "artifact": {
+    "query_id": "stage7-demo-fixture",
+    "sql": "SELECT c.pty_id FROM ads_cust_info_d AS c",
+    "params": {},
+    "query_plan": {"time_range": {"type": "quarter", "year": 2026, "quarter": 1}},
+    "dialect": "mysql",
+    "logical_plan": {},
+    "metric_aliases": ["average_total_asset", "period_end_asset", "asset_change_rate", "cash_asset_ratio", "stock_holding_ratio", "fund_holding_ratio", "bond_holding_ratio", "wealth_management_holding_ratio", "trade_count", "net_inflow"],
+    "selected_columns": ["pty_id", "age", "gender", "customer_level", "city", "average_total_asset", "period_end_asset", "asset_change_rate", "cash_asset_ratio", "stock_holding_ratio", "fund_holding_ratio", "bond_holding_ratio", "wealth_management_holding_ratio", "trade_count", "net_inflow"],
+    "source_tables": ["ads_cust_info_d", "dws_cust_aset_d", "dws_cust_fin_d", "dwd_cust_hold_d", "dwd_cust_tran_d"]
+  },
+  "execution_result": {
+    "status": "success",
+    "columns": ["pty_id", "age", "gender", "customer_level", "city", "average_total_asset", "period_end_asset", "asset_change_rate", "cash_asset_ratio", "stock_holding_ratio", "fund_holding_ratio", "bond_holding_ratio", "wealth_management_holding_ratio", "trade_count", "net_inflow"],
+    "rows": [
+      ["C-DEMO-001", 42, "F", "1000001", "南京", 1850000, 1900000, -0.05, 0.43, 0.75, 0.043, 0.05, 0.02, 35, -200000],
+      ["C-DEMO-002", 35, "M", "1000003", "苏州", 600000, 650000, 0.08, 0.2, 0.35, 0.25, 0.15, 0.05, 10, 50000]
+    ],
+    "trace": {
+      "query_id": "stage7-demo-fixture",
+      "query_plan": {"time_range": {"type": "quarter", "year": 2026, "quarter": 1}},
+      "status": "success",
+      "validation": {"allowed": true, "fixture": true},
+      "sql": "SELECT c.pty_id FROM ads_cust_info_d AS c",
+      "parameter_names": [],
+      "attempts": 1,
+      "elapsed_ms": 1.0,
+      "result_validation": {"allowed": true, "fixture": true},
+      "error": null
+    }
+  }
+}

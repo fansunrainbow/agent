@@ -1,0 +1,72 @@
+{
+  "case_id": "C005",
+  "category": "Complex",
+  "description": "Q1资产增长且活跃",
+  "input": "查询Q1资产增长且交易次数不少于20的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "asset_change",
+      "trade_count"
+    ],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "metric",
+        "target": "asset_change",
+        "operator": "gt",
+        "value": 0,
+        "source": "explicit",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "metric",
+        "target": "trade_count",
+        "operator": "gte",
+        "value": 20,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

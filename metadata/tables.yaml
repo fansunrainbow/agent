@@ -1,0 +1,484 @@
+database:
+  name: agentic_marketing
+  engine: MySQL
+  version: "8.0"
+  charset: utf8mb4
+
+tables:
+
+  ads_cust_info_d:
+    display_name: 客户信息表
+    table_type: snapshot_dimension
+    description: 2026-05-31 客户信息快照，用于客户属性、地域、等级、状态及所属营业部分析。
+    row_count: 500
+
+    grain:
+      description: 一名客户一条快照记录
+      keys:
+        - pty_id
+
+    time:
+      field: data_dt
+      min: "20260531"
+      max: "20260531"
+      type: snapshot
+      warning: 客户属性仅代表2026-05-31快照，不应直接解释为2026年1月至3月时的历史客户属性。
+
+    primary_entity: customer
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+        data_type: varchar
+      pty_id:
+        description: 客户号
+        role: customer_id
+        data_type: varchar
+      sor_pty_id:
+        description: 来源客户号
+        role: source_customer_id
+        data_type: varchar
+      cust_lvl_cd:
+        description: 客户等级代码
+        role: customer_level_code
+        dictionary_table: dim_public
+      cust_status:
+        description: 客户状态代码
+        role: customer_status_code
+        dictionary_table: dim_public
+      cust_type:
+        description: 客户类型
+        role: customer_type
+      prov_name:
+        description: 省份
+        role: province
+      city_name:
+        description: 城市
+        role: city
+      birth_dt:
+        description: 出生日期
+        role: birth_date
+      cust_age:
+        description: 客户年龄
+        role: age
+      name:
+        description: 客户姓名
+        role: customer_name
+      gender_cd:
+        description: 性别代码
+        role: gender_code
+        dictionary_table: dim_public
+      edu_cd:
+        description: 学历代码
+        role: education_code
+        dictionary_table: dim_public
+      prof_cd:
+        description: 职业类型编码
+        role: profession_code
+        dictionary_table: dim_public
+      org_id:
+        description: 所属营业部ID
+        role: branch_id
+
+    use_cases:
+      - 客户画像
+      - 客户等级分析
+      - 客户状态分析
+      - 地域分析
+      - 营业部客户分析
+
+  dim_branch:
+    display_name: 营业部表
+    table_type: snapshot_dimension
+    description: 2026-05-31 营业部及上级机构快照。
+    row_count: 312
+
+    grain:
+      description: 一个营业部一条快照记录
+      keys:
+        - org_id
+
+    time:
+      field: data_dt
+      min: "20260531"
+      max: "20260531"
+      type: snapshot
+
+    primary_entity: branch
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+      org_id:
+        description: 营业部ID
+        role: branch_id
+      org_name:
+        description: 营业部名称
+        role: branch_name
+      up_org_id:
+        description: 上级营业部或分公司ID
+        role: parent_branch_id
+      up_org_name:
+        description: 上级营业部或分公司名称
+        role: parent_branch_name
+
+    use_cases:
+      - 营业部分析
+      - 分公司分析
+      - 客户所属机构分析
+
+  dim_product:
+    display_name: 产品属性维表
+    table_type: dimension
+    description: 产品及产品分类信息。
+    row_count: 334694
+
+    grain:
+      description: 一个产品一条记录
+      keys:
+        - prdt_id
+
+    primary_entity: product
+
+    columns:
+      prdt_id:
+        description: 产品ID
+        role: product_id
+      prdt_name:
+        description: 产品名称
+        role: product_name
+      sor_prdt_id:
+        description: 来源产品代码
+        role: source_product_id
+      market_id:
+        description: 市场ID
+        role: market_id
+      prdt_type_id:
+        description: 产品二级分类ID
+        role: product_category_level2_id
+      prdt_type_name:
+        description: 产品二级分类名称
+        role: product_category_level2_name
+      up_prdt_type_id:
+        description: 产品一级分类ID
+        role: product_category_level1_id
+      up_prdt_type_name:
+        description: 产品一级分类名称
+        role: product_category_level1_name
+
+    use_cases:
+      - 产品分析
+      - 产品分类分析
+      - 持仓产品分析
+      - 交易产品分析
+
+  dim_public:
+    display_name: 标准化编码字典表
+    table_type: dictionary
+    description: 公共编码字典，用于将业务代码转换为中文业务含义。
+    row_count: 155
+
+    grain:
+      description: 一个字典类型下一个编码一条记录
+      keys:
+        - code_type_id
+        - code
+
+    primary_entity: dictionary
+
+    columns:
+      code:
+        description: 标准字典码
+        role: dictionary_code
+      code_type_id:
+        description: 标准字典码类型
+        role: dictionary_type
+      describe:
+        description: 标准字典描述
+        role: dictionary_description
+
+    use_cases:
+      - 客户等级代码翻译
+      - 客户状态代码翻译
+      - 性别代码翻译
+      - 其他业务编码翻译
+
+  dws_cust_aset_d:
+    display_name: 客户资产日汇总表
+    table_type: fact
+    description: 客户每日普通账户与信用账户资产汇总。
+    row_count: 43684
+
+    grain:
+      description: 客户 + 日期
+      keys:
+        - pty_id
+        - data_dt
+
+    time:
+      field: data_dt
+      min: "20260101"
+      max: "20260331"
+      type: historical_daily
+
+    primary_entity: customer_asset
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+      pty_id:
+        description: 客户号
+        role: customer_id
+      nm_tot_aset:
+        description: 普通账户总资产
+        role: normal_total_asset
+        aggregation: sum
+      nm_bal:
+        description: 普通账户现金资产
+        role: normal_cash_balance
+        aggregation: sum
+      fc_pur_aset:
+        description: 信用账户净资产
+        role: credit_net_asset
+        aggregation: sum
+      fc_bal:
+        description: 信用账户现金资产
+        role: credit_cash_balance
+        aggregation: sum
+
+    use_cases:
+      - 客户资产规模
+      - 客户资产排名
+      - 普通账户资产
+      - 信用账户资产
+      - 资产趋势分析
+
+  dws_cust_fin_d:
+    display_name: 客户资金流动日事实表
+    table_type: fact
+    description: 客户每日资金及证券转入转出事实。
+    row_count: 4892
+
+    grain:
+      description: 客户 + 日期 + 系统来源
+      keys:
+        - pty_id
+        - data_dt
+        - sys_source
+
+    time:
+      field: data_dt
+      min: "20260105"
+      max: "20260331"
+      type: historical_daily
+
+    primary_entity: customer_fund_flow
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+      pty_id:
+        description: 客户号
+        role: customer_id
+      sys_source:
+        description: 系统来源
+        role: account_system
+        enum:
+          nm: 普通账户
+          fc: 信用账户
+      cash_in:
+        description: 现金转入
+        role: cash_in
+        aggregation: sum
+      cash_out:
+        description: 现金转出
+        role: cash_out
+        aggregation: sum
+      tran_in:
+        description: 证券转入、托管转入、转托转入
+        role: securities_in
+        aggregation: sum
+      tran_out:
+        description: 证券转出、托管转出、转托转出
+        role: securities_out
+        aggregation: sum
+      assign_in:
+        description: 指定转入
+        role: assign_in
+        aggregation: sum
+      assign_out:
+        description: 撤指定转出
+        role: assign_out
+        aggregation: sum
+
+    use_cases:
+      - 资金流入
+      - 资金流出
+      - 净资金流
+      - 普通账户资金流
+      - 信用账户资金流
+
+  dwd_cust_tran_d:
+    display_name: 客户交易类买卖日事实表
+    table_type: fact
+    description: 客户按日、产品、账户系统和币种汇总的买卖交易事实。
+    row_count: 39060
+
+    grain:
+      description: 客户 + 日期 + 产品 + 系统来源 + 币种
+      keys:
+        - pty_id
+        - data_dt
+        - prdt_id
+        - sys_source
+        - ccy
+
+    time:
+      field: data_dt
+      min: "20260105"
+      max: "20260331"
+      type: historical_daily
+
+    primary_entity: customer_transaction
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+      pty_id:
+        description: 客户号
+        role: customer_id
+      prdt_id:
+        description: 产品ID
+        role: product_id
+      sys_source:
+        description: 系统来源
+        role: account_system
+        enum:
+          nm: 普通账户
+          fc: 信用账户
+      ccy:
+        description: 币种
+        role: currency
+        enum:
+          "0": 人民币
+          "1": 美元
+          "2": 港币
+        observed_values:
+          - "0"
+      buy_cnt:
+        description: 买入次数
+        role: buy_count
+        aggregation: sum
+      buy_mnt:
+        description: 买入数量
+        role: buy_quantity
+        aggregation: sum
+      buy_rake:
+        description: 买入佣金
+        role: buy_commission
+        aggregation: sum
+      buy_amt:
+        description: 买入金额
+        role: buy_amount
+        aggregation: sum
+      buy_fare:
+        description: 买入费用
+        role: buy_fee
+        aggregation: sum
+      sell_cnt:
+        description: 卖出次数
+        role: sell_count
+        aggregation: sum
+      sell_mnt:
+        description: 卖出数量
+        role: sell_quantity
+        aggregation: sum
+      sell_rake:
+        description: 卖出佣金
+        role: sell_commission
+        aggregation: sum
+      sell_amt:
+        description: 卖出金额
+        role: sell_amount
+        aggregation: sum
+      sell_fare:
+        description: 卖出费用
+        role: sell_fee
+        aggregation: sum
+
+    use_cases:
+      - 交易金额分析
+      - 买入分析
+      - 卖出分析
+      - 交易次数分析
+      - 产品交易分析
+      - 客户交易排名
+
+  dwd_cust_hold_d:
+    display_name: 客户持有产品日事实表
+    table_type: fact
+    description: 客户每日产品持仓及持仓市值事实。
+    row_count: 408150
+
+    grain:
+      description: 客户 + 日期 + 产品 + 系统来源 + 币种
+      keys:
+        - pty_id
+        - data_dt
+        - prdt_id
+        - sys_source
+        - ccy
+
+    time:
+      field: data_dt
+      min: "20260101"
+      max: "20260331"
+      type: historical_daily
+
+    primary_entity: customer_holding
+
+    columns:
+      data_dt:
+        description: 数据日期
+        role: date
+      pty_id:
+        description: 客户号
+        role: customer_id
+      prdt_id:
+        description: 产品ID
+        role: product_id
+      sys_source:
+        description: 系统来源
+        role: account_system
+        enum:
+          nm: 普通账户
+          fc: 信用账户
+      ccy:
+        description: 币种
+        role: currency
+        enum:
+          "0": 人民币
+          "1": 美元
+          "2": 港币
+        observed_values:
+          - "0"
+      hold_cnt:
+        description: 持有份额
+        role: holding_quantity
+        aggregation: sum
+      mkt_val:
+        description: 持有市值
+        role: market_value
+        aggregation: sum
+
+    use_cases:
+      - 客户持仓分析
+      - 持仓市值分析
+      - 产品持有人分析
+      - 客户持仓排名
+      - 产品持仓分布

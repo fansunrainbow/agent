@@ -1,0 +1,57 @@
+{
+  "case_id": "A008",
+  "category": "Ambiguous",
+  "description": "资产较高客户",
+  "input": "资产较高客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "资产较高",
+        "type": "business_rule",
+        "reason": "未指定资产指标和阈值",
+        "question": "请确认指标和阈值",
+        "candidates": [
+          "total_asset",
+          "average_total_asset"
+        ]
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 0.95,
+      "metrics": 0.6,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 0.6
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

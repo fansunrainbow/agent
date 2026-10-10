@@ -1,0 +1,278 @@
+database: agentic_marketing
+
+joins:
+
+  customer_to_asset:
+    left_table: ads_cust_info_d
+    right_table: dws_cust_aset_d
+    join_type: one_to_many
+    condition:
+      left_column: pty_id
+      right_column: pty_id
+    sql: ads_cust_info_d.pty_id = dws_cust_aset_d.pty_id
+    semantic: 客户信息关联客户资产日汇总
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 客户画像结合资产分析
+      - 客户等级与资产规模分析
+      - 地域与资产分析
+    warnings:
+      - ads_cust_info_d 为 2026-05-31 客户快照
+      - 不应把其中客户属性直接解释为 2026 年 1~3 月的历史属性
+
+  customer_to_fund_flow:
+    left_table: ads_cust_info_d
+    right_table: dws_cust_fin_d
+    join_type: one_to_many
+    condition:
+      left_column: pty_id
+      right_column: pty_id
+    sql: ads_cust_info_d.pty_id = dws_cust_fin_d.pty_id
+    semantic: 客户信息关联客户资金流动事实
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 客户资金流分析
+      - 客户等级与资金净流入分析
+      - 地域与资金流分析
+    warnings:
+      - ads_cust_info_d 为 2026-05-31 快照
+
+  customer_to_transaction:
+    left_table: ads_cust_info_d
+    right_table: dwd_cust_tran_d
+    join_type: one_to_many
+    condition:
+      left_column: pty_id
+      right_column: pty_id
+    sql: ads_cust_info_d.pty_id = dwd_cust_tran_d.pty_id
+    semantic: 客户信息关联客户交易事实
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 客户交易金额分析
+      - 客户交易次数分析
+      - 客户等级与交易活跃度分析
+      - 地域与交易分析
+    warnings:
+      - 客户属性来自 2026-05-31 快照
+
+  customer_to_holding:
+    left_table: ads_cust_info_d
+    right_table: dwd_cust_hold_d
+    join_type: one_to_many
+    condition:
+      left_column: pty_id
+      right_column: pty_id
+    sql: ads_cust_info_d.pty_id = dwd_cust_hold_d.pty_id
+    semantic: 客户信息关联客户持仓事实
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 客户持仓市值分析
+      - 客户产品偏好分析
+      - 客户等级与持仓分析
+      - 地域与持仓分析
+    warnings:
+      - 客户属性来自 2026-05-31 快照
+
+  branch_to_customer:
+    left_table: dim_branch
+    right_table: ads_cust_info_d
+    join_type: one_to_many
+    condition:
+      left_column: org_id
+      right_column: org_id
+    sql: dim_branch.org_id = ads_cust_info_d.org_id
+    semantic: 营业部关联所属客户
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 营业部客户数分析
+      - 营业部资产分析
+      - 营业部交易分析
+      - 分公司层级分析
+
+  product_to_transaction:
+    left_table: dim_product
+    right_table: dwd_cust_tran_d
+    join_type: one_to_many
+    condition:
+      left_column: prdt_id
+      right_column: prdt_id
+    sql: dim_product.prdt_id = dwd_cust_tran_d.prdt_id
+    semantic: 产品信息关联客户交易事实
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 产品交易金额分析
+      - 产品买入卖出分析
+      - 产品分类交易分析
+      - 客户产品交易偏好分析
+
+  product_to_holding:
+    left_table: dim_product
+    right_table: dwd_cust_hold_d
+    join_type: one_to_many
+    condition:
+      left_column: prdt_id
+      right_column: prdt_id
+    sql: dim_product.prdt_id = dwd_cust_hold_d.prdt_id
+    semantic: 产品信息关联客户持仓事实
+    verified: true
+    unmatched_right_rows: 0
+    usage:
+      - 产品持仓市值分析
+      - 产品持有人数分析
+      - 产品分类持仓分析
+      - 客户产品持仓偏好分析
+
+dictionary_usage:
+  table: dim_public
+  join_mode: semantic_dictionary
+  description: >
+    dim_public 是公共编码字典表。由于不同业务字段可能对应不同
+    code_type_id，不能仅按 code 与所有编码字段直接连接。
+    使用前必须先确定目标业务字段对应的 code_type_id。
+  key_columns:
+    - code_type_id
+    - code
+  value_column: describe
+
+  fields_using_dictionary:
+    - table: ads_cust_info_d
+      column: cust_lvl_cd
+      semantic: 客户等级
+    - table: ads_cust_info_d
+      column: cust_status
+      semantic: 客户状态
+    - table: ads_cust_info_d
+      column: gender_cd
+      semantic: 性别
+    - table: ads_cust_info_d
+      column: edu_cd
+      semantic: 学历
+    - table: ads_cust_info_d
+      column: prof_cd
+      semantic: 职业类型
+
+preferred_join_paths:
+
+  customer_asset_analysis:
+    path:
+      - ads_cust_info_d
+      - dws_cust_aset_d
+    join_keys:
+      - pty_id
+
+  customer_fund_flow_analysis:
+    path:
+      - ads_cust_info_d
+      - dws_cust_fin_d
+    join_keys:
+      - pty_id
+
+  customer_transaction_analysis:
+    path:
+      - ads_cust_info_d
+      - dwd_cust_tran_d
+    join_keys:
+      - pty_id
+
+  customer_holding_analysis:
+    path:
+      - ads_cust_info_d
+      - dwd_cust_hold_d
+    join_keys:
+      - pty_id
+
+  branch_asset_analysis:
+    path:
+      - dim_branch
+      - ads_cust_info_d
+      - dws_cust_aset_d
+    join_keys:
+      - org_id
+      - pty_id
+
+  branch_transaction_analysis:
+    path:
+      - dim_branch
+      - ads_cust_info_d
+      - dwd_cust_tran_d
+    join_keys:
+      - org_id
+      - pty_id
+
+  branch_holding_analysis:
+    path:
+      - dim_branch
+      - ads_cust_info_d
+      - dwd_cust_hold_d
+    join_keys:
+      - org_id
+      - pty_id
+
+  product_transaction_analysis:
+    path:
+      - dim_product
+      - dwd_cust_tran_d
+    join_keys:
+      - prdt_id
+
+  product_holding_analysis:
+    path:
+      - dim_product
+      - dwd_cust_hold_d
+    join_keys:
+      - prdt_id
+
+  customer_product_transaction_analysis:
+    path:
+      - ads_cust_info_d
+      - dwd_cust_tran_d
+      - dim_product
+    join_keys:
+      - pty_id
+      - prdt_id
+
+  customer_product_holding_analysis:
+    path:
+      - ads_cust_info_d
+      - dwd_cust_hold_d
+      - dim_product
+    join_keys:
+      - pty_id
+      - prdt_id
+
+join_rules:
+
+  - id: no_direct_fact_to_fact_join
+    description: >
+      默认禁止直接把多个事实表按 pty_id 直接连接后再聚合，
+      因为不同事实表粒度不同，容易产生行数膨胀和指标重复计算。
+    severity: high
+
+  - id: aggregate_before_fact_join
+    description: >
+      如果业务问题必须组合资产、交易、资金流或持仓等多个事实表，
+      应先分别按照目标分析粒度聚合，再进行连接。
+    severity: high
+
+  - id: preserve_fact_grain
+    description: >
+      Join 前必须检查左右表粒度，避免一对多与多对多连接导致指标重复。
+    severity: high
+
+  - id: snapshot_attribute_warning
+    description: >
+      使用 ads_cust_info_d 或 dim_branch 的属性解释 2026 年 1~3 月历史事实时，
+      必须标记这些属性来自 2026-05-31 快照。
+    severity: high
+
+  - id: dictionary_type_required
+    description: >
+      使用 dim_public 翻译代码时，必须同时确定 code_type_id，
+      禁止仅依据 code 直接关联。
+    severity: high

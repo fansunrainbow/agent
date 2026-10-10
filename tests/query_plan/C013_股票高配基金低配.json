@@ -1,0 +1,68 @@
+{
+  "case_id": "C013",
+  "category": "Complex",
+  "description": "股票高配基金低配",
+  "input": "股票占比高于50%且基金占比低于10%的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "stock_holding_ratio",
+      "fund_holding_ratio"
+    ],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "metric",
+        "target": "stock_holding_ratio",
+        "operator": "gt",
+        "value": 0.5,
+        "source": "explicit",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "metric",
+        "target": "fund_holding_ratio",
+        "operator": "lt",
+        "value": 0.1,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

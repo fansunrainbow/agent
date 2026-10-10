@@ -1,0 +1,5 @@
+max_result_rows: 10000
+duplicate_amplification_threshold: 1.2
+empty_result_severity: warning
+ratio_min: 0.0
+ratio_max: 1.0

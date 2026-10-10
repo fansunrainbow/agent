@@ -1,0 +1,53 @@
+{
+  "case_id": "S007",
+  "category": "Simple",
+  "description": "总资产最高前10名",
+  "input": "总资产最高的前10名客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "ranking",
+    "subject": "customer",
+    "metrics": [
+      "total_asset"
+    ],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [
+      {
+        "field": "total_asset",
+        "direction": "desc"
+      }
+    ],
+    "limit": 10,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

@@ -1,0 +1,266 @@
+dimensions:
+
+  customer:
+    name: 客户
+    source_table: ads_cust_info_d
+    source_field: pty_id
+    type: entity
+    aliases:
+      - 客户
+      - 客户号
+      - 客户ID
+
+  gender:
+    name: 性别
+    source_table: ads_cust_info_d
+    source_field: gender_cd
+    type: dictionary
+    dictionary_table: dim_public
+    dictionary_required: true
+    aliases:
+      - 性别
+      - 男女性别
+
+  age:
+    name: 年龄
+    source_table: ads_cust_info_d
+    source_field: cust_age
+    type: numeric
+    aliases:
+      - 年龄
+      - 客户年龄
+
+  age_group:
+    name: 年龄段
+    type: derived
+    source_table: ads_cust_info_d
+    source_field: cust_age
+    aliases:
+      - 年龄段
+      - 年龄区间
+      - 年龄分组
+    buckets:
+      - label: 30岁以下
+        condition: "cust_age < 30"
+      - label: 30-49岁
+        condition: "cust_age >= 30 AND cust_age < 50"
+      - label: 50-59岁
+        condition: "cust_age >= 50 AND cust_age < 60"
+      - label: 60岁及以上
+        condition: "cust_age >= 60"
+
+  customer_level:
+    name: 客户等级
+    source_table: ads_cust_info_d
+    source_field: cust_lvl_cd
+    type: dictionary
+    dictionary_table: dim_public
+    dictionary_required: true
+    aliases:
+      - 客户等级
+      - 卡等级
+      - 客户级别
+
+  customer_status:
+    name: 客户状态
+    source_table: ads_cust_info_d
+    source_field: cust_status
+    type: dictionary
+    dictionary_table: dim_public
+    dictionary_required: true
+    aliases:
+      - 客户状态
+      - 状态
+
+  customer_type:
+    name: 客户类型
+    source_table: ads_cust_info_d
+    source_field: cust_type
+    type: categorical
+    aliases:
+      - 客户类型
+      - 客户类别
+
+  education:
+    name: 学历
+    source_table: ads_cust_info_d
+    source_field: edu_cd
+    type: dictionary
+    dictionary_table: dim_public
+    dictionary_required: true
+    aliases:
+      - 学历
+      - 教育程度
+      - 学历层次
+
+  profession:
+    name: 职业
+    source_table: ads_cust_info_d
+    source_field: prof_cd
+    type: dictionary
+    dictionary_table: dim_public
+    dictionary_required: true
+    aliases:
+      - 职业
+      - 职业类型
+      - 从业类型
+
+  province:
+    name: 省份
+    source_table: ads_cust_info_d
+    source_field: prov_name
+    type: categorical
+    aliases:
+      - 省份
+      - 省
+      - 所在省份
+
+  city:
+    name: 城市
+    source_table: ads_cust_info_d
+    source_field: city_name
+    type: categorical
+    aliases:
+      - 城市
+      - 地区
+      - 所在城市
+
+  branch:
+    name: 营业部
+    source_table: dim_branch
+    source_field: org_id
+    display_field: org_name
+    type: entity
+    aliases:
+      - 营业部
+      - 机构
+      - 客户所属营业部
+
+  parent_branch:
+    name: 上级机构
+    source_table: dim_branch
+    source_field: up_org_id
+    display_field: up_org_name
+    type: entity
+    aliases:
+      - 上级机构
+      - 上级营业部
+      - 分公司
+
+  product:
+    name: 产品
+    source_table: dim_product
+    source_field: prdt_id
+    display_field: prdt_name
+    type: entity
+    aliases:
+      - 产品
+      - 产品名称
+      - 证券产品
+
+  product_primary_category:
+    name: 产品一级分类
+    source_table: dim_product
+    source_field: up_prdt_type_name
+    key_field: up_prdt_type_id
+    display_field: up_prdt_type_name
+    type: categorical
+    aliases:
+      - 产品一级分类
+      - 一级产品分类
+      - 大类
+
+  product_secondary_category:
+    name: 产品二级分类
+    source_table: dim_product
+    source_field: prdt_type_name
+    key_field: prdt_type_id
+    display_field: prdt_type_name
+    type: categorical
+    aliases:
+      - 产品二级分类
+      - 二级产品分类
+      - 产品类别
+
+  market:
+    name: 市场
+    source_table: dim_product
+    source_field: market_id
+    type: categorical
+    aliases:
+      - 市场
+      - 交易市场
+
+  date:
+    name: 日期
+    type: time
+    source_fields:
+      - ads_cust_info_d.data_dt
+      - dim_branch.data_dt
+      - dws_cust_aset_d.data_dt
+      - dws_cust_fin_d.data_dt
+      - dwd_cust_tran_d.data_dt
+      - dwd_cust_hold_d.data_dt
+    format: YYYYMMDD
+    aliases:
+      - 日期
+      - 数据日期
+      - 业务日期
+
+  month:
+    name: 月份
+    type: derived_time
+    source_dimension: date
+    expression: "SUBSTRING(data_dt, 1, 6)"
+    aliases:
+      - 月份
+      - 月
+      - 按月
+
+  quarter:
+    name: 季度
+    type: derived_time
+    source_dimension: date
+    aliases:
+      - 季度
+      - Q1
+      - Q2
+      - Q3
+      - Q4
+    rules:
+      Q1:
+        months:
+          - "01"
+          - "02"
+          - "03"
+      Q2:
+        months:
+          - "04"
+          - "05"
+          - "06"
+      Q3:
+        months:
+          - "07"
+          - "08"
+          - "09"
+      Q4:
+        months:
+          - "10"
+          - "11"
+          - "12"
+
+  account_source:
+    name: 账户来源
+    source_fields:
+      - dws_cust_fin_d.sys_source
+      - dwd_cust_tran_d.sys_source
+      - dwd_cust_hold_d.sys_source
+    type: categorical
+    aliases:
+      - 账户来源
+      - 账户类型
+      - 普通账户
+      - 信用账户
+    enum:
+      nm: 普通账户
+      fc: 信用账户

@@ -1,0 +1,79 @@
+{
+  "case_id": "C016",
+  "category": "Complex",
+  "description": "钻石男性百万资产",
+  "input": "钻石男性客户中总资产超过100万的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "total_asset"
+    ],
+    "dimensions": [
+      "customer_level",
+      "gender"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "concept",
+        "target": "diamond_customer",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "concept",
+        "target": "male_customer",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      },
+      {
+        "id": "f3",
+        "type": "metric",
+        "target": "total_asset",
+        "operator": "gt",
+        "value": 1000000,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

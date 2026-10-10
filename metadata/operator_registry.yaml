@@ -1,0 +1,189 @@
+operators:
+
+  eq:
+    name: 等于
+    category: comparison
+    sql: "="
+    value_type: scalar
+    aliases:
+      - 等于
+      - 是
+      - 为
+      - 等于某值
+
+  neq:
+    name: 不等于
+    category: comparison
+    sql: "!="
+    value_type: scalar
+    aliases:
+      - 不等于
+      - 不是
+      - 不为
+
+  gt:
+    name: 大于
+    category: comparison
+    sql: ">"
+    value_type: scalar
+    aliases:
+      - 大于
+      - 超过
+      - 高于
+      - 多于
+
+  gte:
+    name: 大于等于
+    category: comparison
+    sql: ">="
+    value_type: scalar
+    aliases:
+      - 大于等于
+      - 不低于
+      - 至少
+      - 不少于
+
+  lt:
+    name: 小于
+    category: comparison
+    sql: "<"
+    value_type: scalar
+    aliases:
+      - 小于
+      - 低于
+      - 少于
+      - 不足
+
+  lte:
+    name: 小于等于
+    category: comparison
+    sql: "<="
+    value_type: scalar
+    aliases:
+      - 小于等于
+      - 不高于
+      - 至多
+      - 不超过
+
+  in:
+    name: 属于集合
+    category: set
+    sql: "IN"
+    value_type: list
+    aliases:
+      - 属于
+      - 在其中
+      - 包含于
+      - 任一
+
+  not_in:
+    name: 不属于集合
+    category: set
+    sql: "NOT IN"
+    value_type: list
+    aliases:
+      - 不属于
+      - 不在其中
+      - 排除
+
+  between:
+    name: 区间
+    category: range
+    sql: "BETWEEN"
+    value_type: range
+    aliases:
+      - 介于
+      - 在范围内
+      - 从某值到某值
+      - 区间内
+
+  contains:
+    name: 包含
+    category: string
+    value_type: scalar
+    aliases:
+      - 包含
+      - 含有
+      - 名称中包含
+
+  starts_with:
+    name: 前缀匹配
+    category: string
+    value_type: scalar
+    aliases:
+      - 以某内容开头
+      - 开头是
+
+  ends_with:
+    name: 后缀匹配
+    category: string
+    value_type: scalar
+    aliases:
+      - 以某内容结尾
+      - 结尾是
+
+  exists:
+    name: 存在
+    category: relation
+    value_type: none
+    aliases:
+      - 存在
+      - 有
+      - 曾经有
+      - 发生过
+      - 交易过
+      - 持有
+
+  not_exists:
+    name: 不存在
+    category: relation
+    value_type: none
+    aliases:
+      - 不存在
+      - 没有
+      - 未发生
+      - 未持有
+      - 未交易
+
+  is_null:
+    name: 为空
+    category: null_check
+    value_type: none
+    aliases:
+      - 为空
+      - 缺失
+      - 无值
+
+  is_not_null:
+    name: 非空
+    category: null_check
+    value_type: none
+    aliases:
+      - 非空
+      - 有值
+      - 不为空
+
+
+logic_operators:
+
+  and:
+    name: 且
+    aliases:
+      - 且
+      - 并且
+      - 同时
+      - 以及
+
+  or:
+    name: 或
+    aliases:
+      - 或
+      - 或者
+      - 任一
+
+  not:
+    name: 非
+    aliases:
+      - 非
+      - 不
+      - 排除

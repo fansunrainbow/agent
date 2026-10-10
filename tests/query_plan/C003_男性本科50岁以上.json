@@ -1,0 +1,78 @@
+{
+  "case_id": "C003",
+  "category": "Complex",
+  "description": "男性本科50岁以上",
+  "input": "查询男性、本科及以上且年龄大于50岁的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [
+      "gender",
+      "education",
+      "age"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "concept",
+        "target": "male_customer",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "concept",
+        "target": "bachelor_or_above",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      },
+      {
+        "id": "f3",
+        "type": "dimension",
+        "target": "age",
+        "operator": "gt",
+        "value": 50,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

@@ -1,0 +1,69 @@
+{
+  "case_id": "C015",
+  "category": "Complex",
+  "description": "南京Q1交易Top20",
+  "input": "南京Q1交易金额最高前20名客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "ranking",
+    "subject": "customer",
+    "metrics": [
+      "trade_amount"
+    ],
+    "dimensions": [
+      "city"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "dimension",
+        "target": "city",
+        "operator": "eq",
+        "value": "南京",
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [
+      {
+        "field": "trade_amount",
+        "direction": "desc"
+      }
+    ],
+    "limit": 20,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

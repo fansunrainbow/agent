@@ -1,0 +1,50 @@
+{
+  "case_id": "H001",
+  "category": "Invalid/Hallucination",
+  "description": "未知指标",
+  "input": "查询客户满意度评分。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "metric_query",
+    "subject": "customer",
+    "metrics": [
+      "customer_satisfaction_score"
+    ],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "summary",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": false,
+    "error_codes": [
+      "UNKNOWN_METRIC"
+    ]
+  }
+}

@@ -1,0 +1,76 @@
+{
+  "case_id": "C019",
+  "category": "Complex",
+  "description": "Q1末普通账户持仓",
+  "input": "Q1末普通账户持仓市值超过10万的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "holding_market_value"
+    ],
+    "dimensions": [
+      "account_source"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "concept",
+        "target": "normal_account",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "metric",
+        "target": "holding_market_value",
+        "operator": "gt",
+        "value": 100000,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "end_of_period",
+      "period": {
+        "type": "quarter",
+        "year": 2026,
+        "quarter": 1
+      }
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

@@ -1,0 +1,75 @@
+{
+  "case_id": "C018",
+  "category": "Complex",
+  "description": "净流出且资产下降",
+  "input": "净流出并且资产下降的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "net_inflow",
+      "asset_change"
+    ],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "metric",
+        "target": "net_inflow",
+        "operator": "lt",
+        "value": 0,
+        "source": "explicit",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "metric",
+        "target": "asset_change",
+        "operator": "lt",
+        "value": 0,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "净流出且资产下降",
+        "type": "time",
+        "reason": "净流量和资产变化都必须基于明确的统计期间。",
+        "question": "请指定要分析的时间范围。"
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

@@ -1,0 +1,433 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "query_plan.schema.json",
+  "title": "Generic Query Plan Schema",
+  "description": "Stage 4 Business Query Plan 的统一结构定义。",
+  "type": "object",
+
+  "properties": {
+    "version": {
+      "type": "string",
+      "const": "1.0"
+    },
+
+    "status": {
+      "type": "string",
+      "enum": [
+        "ready",
+        "needs_clarification",
+        "invalid"
+      ]
+    },
+
+    "intent": {
+      "type": "string",
+      "enum": [
+        "customer_selection",
+        "metric_query",
+        "group_analysis",
+        "trend_analysis",
+        "ranking",
+        "entity_lookup",
+        "customer_profile",
+        "segment_analysis",
+        "comparison"
+      ]
+    },
+
+    "subject": {
+      "type": "string",
+      "enum": [
+        "customer",
+        "product",
+        "branch",
+        "transaction",
+        "holding"
+      ]
+    },
+
+    "metrics": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+
+    "dimensions": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+
+    "filters": {
+      "type": "array",
+      "items": {
+        "$ref": "filter.schema.json"
+      }
+    },
+
+    "entities": {
+      "type": "array",
+      "items": {
+        "$ref": "entity_ref.schema.json"
+      }
+    },
+
+    "time_range": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "$ref": "time_range.schema.json"
+        }
+      ]
+    },
+
+    "group_by": {
+      "type": "array",
+      "items": {
+        "type": "string",
+        "minLength": 1
+      },
+      "uniqueItems": true
+    },
+
+    "having": {
+      "type": "array",
+      "items": {
+        "$ref": "filter.schema.json"
+      }
+    },
+
+    "order_by": {
+      "type": "array",
+      "items": {
+        "type": "object",
+
+        "properties": {
+          "field": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "direction": {
+            "type": "string",
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          }
+        },
+
+        "required": [
+          "field",
+          "direction"
+        ],
+
+        "additionalProperties": false
+      }
+    },
+
+    "limit": {
+      "oneOf": [
+        {
+          "type": "null"
+        },
+        {
+          "type": "integer",
+          "minimum": 1
+        }
+      ]
+    },
+
+    "output": {
+      "type": "object",
+
+      "properties": {
+        "mode": {
+          "type": "string",
+          "enum": [
+            "detail",
+            "aggregate",
+            "summary"
+          ]
+        },
+
+        "format": {
+          "type": "string",
+          "enum": [
+            "table",
+            "text",
+            "chart"
+          ]
+        },
+
+        "include_details": {
+          "type": "boolean"
+        },
+
+        "include_explanation": {
+          "type": "boolean"
+        }
+      },
+
+      "additionalProperties": false
+    },
+
+    "ambiguities": {
+      "type": "array",
+
+      "items": {
+        "type": "object",
+
+        "properties": {
+          "term": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "type": {
+            "type": "string",
+            "enum": [
+              "time",
+              "metric",
+              "dimension",
+              "business_rule",
+              "entity",
+              "concept",
+              "other"
+            ]
+          },
+
+          "reason": {
+            "type": "string"
+          },
+
+          "question": {
+            "type": "string"
+          },
+
+          "candidates": {
+            "type": "array",
+            "items": {}
+          }
+        },
+
+        "required": [
+          "term",
+          "type"
+        ],
+
+        "additionalProperties": false
+      }
+    },
+
+    "assumptions": {
+      "type": "array",
+
+      "items": {
+        "type": "object",
+
+        "properties": {
+          "description": {
+            "type": "string",
+            "minLength": 1
+          },
+
+          "source": {
+            "type": "string"
+          },
+
+          "review_required": {
+            "type": "boolean"
+          }
+        },
+
+        "required": [
+          "description"
+        ],
+
+        "additionalProperties": false
+      }
+    },
+
+    "confidence": {
+      "type": "object",
+
+      "properties": {
+        "overall": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "intent": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "metrics": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "dimensions": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "entities": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "time": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        },
+
+        "filters": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+
+      "required": [
+        "overall"
+      ],
+
+      "additionalProperties": false
+    },
+
+    "context": {
+      "type": "object",
+
+      "properties": {
+        "parent_plan_id": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+
+        "operation": {
+          "type": "string",
+          "enum": [
+            "new",
+            "modify",
+            "refine",
+            "compare"
+          ]
+        }
+      },
+
+      "required": [
+        "operation"
+      ],
+
+      "additionalProperties": false
+    }
+  },
+
+  "required": [
+    "version",
+    "status",
+    "intent",
+    "subject",
+    "metrics",
+    "dimensions",
+    "filters",
+    "entities",
+    "time_range",
+    "group_by",
+    "having",
+    "order_by",
+    "limit",
+    "output",
+    "ambiguities",
+    "assumptions",
+    "confidence",
+    "context"
+  ],
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "status": {
+            "const": "needs_clarification"
+          }
+        },
+        "required": [
+          "status"
+        ]
+      },
+
+      "then": {
+        "properties": {
+          "ambiguities": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+
+    {
+      "if": {
+        "properties": {
+          "intent": {
+            "const": "ranking"
+          }
+        },
+        "required": [
+          "intent"
+        ]
+      },
+
+      "then": {
+        "properties": {
+          "order_by": {
+            "minItems": 1
+          }
+        }
+      }
+    },
+
+    {
+      "if": {
+        "properties": {
+          "intent": {
+            "const": "trend_analysis"
+          }
+        },
+        "required": [
+          "intent"
+        ]
+      },
+
+      "then": {
+        "properties": {
+          "time_range": {
+            "not": {
+              "type": "null"
+            }
+          }
+        }
+      }
+    }
+  ],
+
+  "additionalProperties": false
+}

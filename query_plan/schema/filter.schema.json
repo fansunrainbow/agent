@@ -1,0 +1,177 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "filter.schema.json",
+  "title": "Filter Schema",
+  "description": "Generic Query Plan 的统一筛选条件结构，支持简单条件和 AND/OR/NOT 逻辑树。",
+
+  "$defs": {
+    "simple_filter": {
+      "type": "object",
+
+      "properties": {
+        "id": {
+          "type": "string",
+          "minLength": 1
+        },
+
+        "type": {
+          "type": "string",
+          "enum": [
+            "dimension",
+            "metric",
+            "concept",
+            "entity"
+          ]
+        },
+
+        "target": {
+          "type": "string",
+          "minLength": 1,
+          "description": "标准维度、指标、业务概念或实体关系目标。"
+        },
+
+        "operator": {
+          "type": "string",
+          "enum": [
+            "eq",
+            "neq",
+            "gt",
+            "gte",
+            "lt",
+            "lte",
+            "in",
+            "not_in",
+            "between",
+            "contains",
+            "starts_with",
+            "ends_with",
+            "exists",
+            "not_exists",
+            "is_null",
+            "is_not_null"
+          ]
+        },
+
+        "value": {},
+
+        "source": {
+          "type": "string",
+          "enum": [
+            "explicit",
+            "dictionary",
+            "entity_resolution",
+            "derived_rule",
+            "context",
+            "business_default"
+          ]
+        },
+
+        "confidence": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1
+        }
+      },
+
+      "required": [
+        "id",
+        "type",
+        "target",
+        "operator",
+        "source",
+        "confidence"
+      ],
+
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "operator": {
+                "enum": [
+                  "exists",
+                  "not_exists",
+                  "is_null",
+                  "is_not_null"
+                ]
+              }
+            },
+            "required": [
+              "operator"
+            ]
+          },
+          "then": {},
+          "else": {
+            "required": [
+              "value"
+            ]
+          }
+        }
+      ],
+
+      "additionalProperties": false
+    },
+
+    "logic_filter": {
+      "type": "object",
+
+      "properties": {
+        "logic": {
+          "type": "string",
+          "enum": [
+            "and",
+            "or",
+            "not"
+          ]
+        },
+
+        "conditions": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/filter_node"
+          },
+          "minItems": 1
+        }
+      },
+
+      "required": [
+        "logic",
+        "conditions"
+      ],
+
+      "allOf": [
+        {
+          "if": {
+            "properties": {
+              "logic": {
+                "const": "not"
+              }
+            }
+          },
+          "then": {
+            "properties": {
+              "conditions": {
+                "minItems": 1,
+                "maxItems": 1
+              }
+            }
+          }
+        }
+      ],
+
+      "additionalProperties": false
+    },
+
+    "filter_node": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/simple_filter"
+        },
+        {
+          "$ref": "#/$defs/logic_filter"
+        }
+      ]
+    }
+  },
+
+  "$ref": "#/$defs/filter_node"
+}

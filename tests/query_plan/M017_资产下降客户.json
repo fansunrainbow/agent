@@ -1,0 +1,65 @@
+{
+  "case_id": "M017",
+  "category": "Medium",
+  "description": "资产下降客户",
+  "input": "查询资产下降的客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [
+      "asset_change"
+    ],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "metric",
+        "target": "asset_change",
+        "operator": "lt",
+        "value": 0,
+        "source": "explicit",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "资产下降",
+        "type": "time",
+        "reason": "资产变化依赖明确的比较期间。",
+        "question": "请指定要比较的时间范围。"
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

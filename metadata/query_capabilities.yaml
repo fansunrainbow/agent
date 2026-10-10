@@ -1,0 +1,293 @@
+capabilities:
+
+  customer_selection:
+    name: 客户筛选
+    subject:
+      - customer
+
+    supported:
+      - dimension_filter
+      - metric_filter
+      - concept_filter
+      - entity_filter
+      - time_filter
+      - and_condition
+      - or_condition
+      - not_condition
+      - ordering
+      - limit
+
+    requires:
+      intent: customer_selection
+
+    notes: >
+      支持根据维度、指标、业务概念、实体和时间条件
+      筛选客户集合，并支持组合条件、排序和 Top-K。
+
+
+  metric_query:
+    name: 指标查询
+
+    subject:
+      - customer
+      - product
+      - branch
+
+    supported:
+      - single_metric
+      - multiple_metrics
+      - dimension_filter
+      - concept_filter
+      - entity_filter
+      - time_filter
+      - aggregation
+
+    requires:
+      intent: metric_query
+
+    notes: >
+      支持查询单个或多个已注册指标。
+      所有指标必须来自 Stage 2 Metric System。
+
+
+  group_analysis:
+    name: 分组分析
+
+    subject:
+      - customer
+      - product
+      - branch
+
+    supported:
+      - group_by
+      - metric_aggregation
+      - dimension_filter
+      - metric_filter
+      - concept_filter
+      - entity_filter
+      - time_filter
+      - ordering
+      - limit
+
+    requires:
+      intent: group_analysis
+
+    notes: >
+      支持按一个或多个已注册维度进行分组，
+      并对标准指标进行统计分析。
+
+
+  trend_analysis:
+    name: 趋势分析
+
+    subject:
+      - customer
+      - product
+      - branch
+
+    supported:
+      - time_grouping
+      - metric_aggregation
+      - dimension_filter
+      - entity_filter
+      - time_filter
+      - ordering
+
+    requires:
+      intent: trend_analysis
+      time_range: true
+
+    notes: >
+      趋势分析必须具备有效时间范围，
+      并按时间维度观察指标变化。
+
+
+  ranking:
+    name: 排名分析
+
+    subject:
+      - customer
+      - product
+      - branch
+
+    supported:
+      - metric_ranking
+      - dimension_filter
+      - metric_filter
+      - concept_filter
+      - entity_filter
+      - time_filter
+      - ordering
+      - limit
+
+    requires:
+      intent: ranking
+      order_by: true
+
+    notes: >
+      支持按照标准指标排序，
+      并通过 limit 表示 Top-K。
+
+
+  entity_lookup:
+    name: 实体查询
+
+    subject:
+      - product
+      - branch
+      - customer
+
+    supported:
+      - exact_entity_lookup
+      - fuzzy_entity_lookup
+      - candidate_return
+      - ambiguity_detection
+      - concept_filter
+      - dimension_filter
+
+    requires:
+      intent: entity_lookup
+
+    notes: >
+      实体必须通过 Stage 3 entity_rules 进行动态解析，
+      不允许模型直接生成不存在的实体 ID。
+
+
+  customer_profile:
+    name: 客户画像
+
+    subject:
+      - customer
+
+    supported:
+      - customer_dimension_output
+      - multiple_metrics
+      - holding_summary
+      - transaction_summary
+      - fund_flow_summary
+      - time_filter
+
+    requires:
+      intent: customer_profile
+      resolved_customer: true
+
+    notes: >
+      用于汇总指定客户的基础属性以及多个经营指标。
+      如果客户实体未唯一解析，不允许继续执行。
+
+
+  segment_analysis:
+    name: 客群分析
+
+    subject:
+      - customer
+
+    supported:
+      - segment_filter
+      - concept_filter
+      - group_by
+      - metric_aggregation
+      - dimension_distribution
+      - ordering
+      - limit
+
+    requires:
+      intent: segment_analysis
+
+    notes: >
+      支持对 Stage 3 中定义的业务客群或筛选后的客户集合
+      进行结构和指标分析。
+
+
+  comparison:
+    name: 对比分析
+
+    subject:
+      - customer
+      - product
+      - branch
+
+    supported:
+      - compare_groups
+      - compare_time_ranges
+      - compare_dimensions
+      - compare_metrics
+      - dimension_filter
+      - entity_filter
+      - time_filter
+
+    requires:
+      intent: comparison
+      comparison_targets: true
+
+    notes: >
+      支持不同群体、时间段、机构或维度之间进行指标比较。
+
+
+global_capabilities:
+
+  logical_conditions:
+    supported:
+      - and
+      - or
+      - not
+
+  ordering:
+    supported_directions:
+      - asc
+      - desc
+
+  top_k:
+    enabled: true
+    min_limit: 1
+
+  time:
+    supported: true
+    semantics_source: metadata/time_semantics.yaml
+
+  entity_resolution:
+    required_for_dynamic_entities: true
+    source: metadata/entity_rules.yaml
+
+  metric_registry:
+    required: true
+    source: metadata/metrics.yaml
+
+  dimension_registry:
+    required: true
+    source: metadata/dimensions.yaml
+
+  concept_registry:
+    required: true
+    source: metadata/business_dictionary.yaml
+
+  unsupported_behavior:
+    action: reject_or_clarify
+    description: >
+      当用户需求超出当前 Query Capability Matrix，
+      不允许通过大模型猜测或硬生成 SQL。
+      应返回 unsupported capability 或要求用户澄清。
+
+
+reserved_future_capabilities:
+
+  cohort_analysis:
+    status: reserved
+
+  funnel_analysis:
+    status: reserved
+
+  correlation_analysis:
+    status: reserved
+
+  forecasting:
+    status: reserved
+
+  anomaly_detection:
+    status: reserved
+
+  year_over_year:
+    status: reserved
+
+  month_over_month:
+    status: reserved

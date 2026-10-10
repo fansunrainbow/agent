@@ -1,0 +1,256 @@
+time_types:
+
+  absolute_date:
+    name: 绝对日期
+    description: >
+      表示一个明确的自然日。
+    required:
+      - date
+
+    example:
+      type: absolute_date
+      date: "2026-03-31"
+
+
+  date_range:
+    name: 日期区间
+    description: >
+      表示明确的开始日期和结束日期。
+    required:
+      - start
+      - end
+
+    example:
+      type: date_range
+      start: "2026-01-10"
+      end: "2026-02-15"
+
+
+  month:
+    name: 月份
+    description: >
+      表示某一年中的指定月份。
+    required:
+      - year
+      - month
+
+    constraints:
+      month:
+        min: 1
+        max: 12
+
+    example:
+      type: month
+      year: 2026
+      month: 3
+
+
+  quarter:
+    name: 季度
+    description: >
+      表示某一年中的指定季度。
+    required:
+      - year
+      - quarter
+
+    constraints:
+      quarter:
+        min: 1
+        max: 4
+
+    example:
+      type: quarter
+      year: 2026
+      quarter: 1
+
+
+  year:
+    name: 年度
+    description: >
+      表示一个完整自然年度。
+    required:
+      - year
+
+    example:
+      type: year
+      year: 2026
+
+
+  ytd:
+    name: 年初至今
+    description: >
+      表示某年年初到指定当前日期或上下文日期。
+    required:
+      - year
+
+    example:
+      type: ytd
+      year: 2026
+
+
+  last_n_days:
+    name: 最近N天
+    description: >
+      表示相对于参考日期向前计算的最近 N 天。
+    required:
+      - n
+
+    constraints:
+      n:
+        min: 1
+
+    example:
+      type: last_n_days
+      n: 30
+
+
+  last_n_months:
+    name: 最近N个月
+    description: >
+      表示相对于参考日期向前计算的最近 N 个月。
+    required:
+      - n
+
+    constraints:
+      n:
+        min: 1
+
+    example:
+      type: last_n_months
+      n: 3
+
+
+  latest:
+    name: 最新
+    description: >
+      表示数据中最新可用时点。
+    required: []
+
+    example:
+      type: latest
+
+
+  start_of_period:
+    name: 期初
+    description: >
+      表示指定统计期间的起始时点。
+      必须与另一个统计期间语义结合使用。
+    required:
+      - period
+
+    example:
+      type: start_of_period
+      period:
+        type: quarter
+        year: 2026
+        quarter: 1
+
+
+  end_of_period:
+    name: 期末
+    description: >
+      表示指定统计期间的结束时点。
+      必须与另一个统计期间语义结合使用。
+    required:
+      - period
+
+    example:
+      type: end_of_period
+      period:
+        type: quarter
+        year: 2026
+        quarter: 1
+
+
+normalization_rules:
+
+  q1:
+    canonical_type: quarter
+    quarter: 1
+
+  q2:
+    canonical_type: quarter
+    quarter: 2
+
+  q3:
+    canonical_type: quarter
+    quarter: 3
+
+  q4:
+    canonical_type: quarter
+    quarter: 4
+
+  今年:
+    canonical_type: year
+    requires_context_year: true
+
+  本年:
+    canonical_type: year
+    requires_context_year: true
+
+  今年以来:
+    canonical_type: ytd
+    requires_context_year: true
+
+  年初至今:
+    canonical_type: ytd
+    requires_context_year: true
+
+  最新:
+    canonical_type: latest
+
+  当前:
+    canonical_type: latest
+
+  期初:
+    canonical_type: start_of_period
+    requires_parent_period: true
+
+  期末:
+    canonical_type: end_of_period
+    requires_parent_period: true
+
+
+ambiguity_rules:
+
+  近期:
+    status: ambiguous
+    requires_clarification: true
+    candidates:
+      - last_n_days
+      - last_n_months
+
+  最近:
+    status: ambiguous
+    requires_clarification_if_n_missing: true
+
+  本季度:
+    status: context_dependent
+    requires_context_year: true
+    requires_context_quarter: true
+
+  本月:
+    status: context_dependent
+    requires_context_year: true
+    requires_context_month: true
+
+
+global_rules:
+
+  do_not_hardcode_quarter_dates:
+    enabled: true
+    description: >
+      Query Plan 只保存 year 和 quarter，
+      不直接把季度转换为具体起止日期。
+
+  explicit_time_priority:
+    enabled: true
+    description: >
+      用户明确给出的日期或时间范围优先于上下文推断。
+
+  unresolved_time_blocks_execution:
+    enabled: true
+    description: >
+      对需要时间范围的指标，如果时间信息缺失或存在歧义，
+      Query Plan 应进入 needs_clarification，
+      不允许自行猜测时间范围。

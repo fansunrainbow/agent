@@ -1,0 +1,48 @@
+version: "1.0"
+
+boundaries:
+  prediction_request:
+    code: UNSUPPORTED_PREDICTION
+    any_markers:
+      - 预测
+      - 概率
+      - 一定会
+      - 最可能
+      - 会不会
+      - 倾向购买
+      - 购买意愿
+      - 流失风险
+      - 转化概率
+      - 响应概率
+    reason: 当前数据和 Query Plan 能力只支持基于已注册事实条件的查询，不支持预测未来行为或概率。
+    question: 无法执行预测类请求。可改为使用已注册的历史资产、持仓、交易或资金指标筛选客户。
+
+  suitability_request:
+    code: SUITABILITY_DATA_REQUIRED
+    action_markers:
+      - 推荐
+      - 最适合
+      - 适合购买
+      - 适合买
+    object_markers:
+      - 具体基金
+      - 具体产品
+      - 金融产品
+      - 证券产品
+      - 基金
+    reason: 具体产品适配或推荐需要风险偏好、适当性与产品风险等级等当前未注册数据，不能仅凭现有查询字段推断。
+    question: 无法安全推荐具体产品。可改为查询客户已有持仓、交易记录或按已注册产品类别筛选。
+
+  unsupported_attribute:
+    code: UNSUPPORTED_ATTRIBUTE
+    any_markers:
+      - 风险偏好
+      - 购买意向
+      - 购买意愿
+      - 流失概率
+      - 流失风险
+      - 响应概率
+      - 客户满意度
+      - 满意度评分
+    reason: 该客户属性或模型输出未在当前 Dimension/Metric Registry 中注册。
+    question: 当前数据不支持该属性。请改用已注册的客户等级、状态、性别、年龄、学历、地区、资产、持仓、交易或资金指标。

@@ -1,0 +1,266 @@
+ambiguity_rules:
+
+  quality_customer:
+    name: 优质客户
+
+    aliases:
+      - 优质客户
+      - 高质量客户
+      - 优质客群
+
+    requires_clarification: true
+
+    options:
+      - customer_level
+      - average_total_asset
+      - trade_count
+      - composite_business_rule
+
+    clarification_text: >
+      “优质客户”缺少统一固定口径，
+      可以按客户等级、资产规模、交易活跃度
+      或综合经营规则进行定义。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+  active_customer:
+    name: 活跃客户
+
+    aliases:
+      - 活跃客户
+      - 活跃客群
+
+    requires_clarification: true
+
+    options:
+      - trade_count
+      - trade_amount
+      - recent_transaction
+
+    clarification_text: >
+      “活跃客户”可能表示交易次数较多、
+      交易金额较高，或近期发生过交易。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+  large_amount:
+    name: 大额资金
+
+    aliases:
+      - 大额资金
+      - 大额金额
+      - 大额
+
+    requires_clarification: true
+
+    options:
+      - absolute_amount_threshold
+      - relative_asset_ratio
+
+    clarification_text: >
+      “大额”没有固定阈值，
+      可以按绝对金额阈值，
+      或按相对于客户资产规模的比例定义。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+  recent:
+    name: 近期
+
+    aliases:
+      - 近期
+      - 最近
+      - 近来
+
+    requires_clarification: true
+
+    options:
+      - last_7_days
+      - last_30_days
+      - last_3_months
+      - user_defined_range
+
+    clarification_text: >
+      “近期”缺少固定时间范围，
+      可解释为最近7天、最近30天、
+      最近3个月或由用户指定时间区间。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+  key_customer:
+    name: 重点客户
+
+    aliases:
+      - 重点客户
+      - 重点客群
+      - 核心客户
+
+    requires_clarification: true
+
+    options:
+      - customer_level
+      - high_asset_customer
+      - active_trading_customer
+      - composite_business_rule
+
+    clarification_text: >
+      “重点客户”属于经营口径，
+      可能基于客户等级、资产规模、
+      交易活跃度或综合规则定义。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+  hot_product:
+    name: 热门产品
+
+    aliases:
+      - 热门产品
+      - 热销产品
+      - 热门证券
+
+    requires_clarification: true
+
+    options:
+      - trade_amount
+      - customer_count
+      - holding_market_value
+
+    clarification_text: >
+      “热门产品”可能按交易金额、
+      参与客户数或持仓规模进行排名。
+
+    behavior:
+      if_context_sufficient: resolve_by_context
+      if_context_insufficient: ask_user
+
+
+ambiguous_aliases:
+
+  平均资产:
+    candidates:
+      - average_total_asset
+      - observed_average_total_asset
+
+    resolution:
+      prefer_metric_with_explicit_context: average_total_asset
+      clarification_if_context_insufficient: true
+
+    explanation: >
+      “平均资产”单独出现时无法区分自然日口径与有效快照日口径；
+      在带有明确客户、时间或筛选上下文时优先采用正式日均资产口径。
+
+  资产:
+    candidates:
+      - total_asset
+      - holding_market_value
+
+    resolution:
+      prefer_metric: total_asset
+      clarification_if_context_insufficient: true
+
+    explanation: >
+      “资产”通常优先理解为客户总资产，
+      但在产品持仓语境中可能指持仓市值。
+
+
+  交易:
+    candidates:
+      - trade_amount
+      - trade_count
+      - transaction_exists
+
+    resolution:
+      clarification_if_context_insufficient: true
+
+    explanation: >
+      “交易”可能表示交易金额、交易次数，
+      也可能只是判断是否发生过交易。
+
+
+  基金:
+    candidates:
+      - fund_product
+      - fund_holding_value
+      - fund_holding_ratio
+      - fund_trade_amount
+
+    resolution:
+      use_context: true
+      clarification_if_context_insufficient: true
+
+    explanation: >
+      “基金”既可以指产品类别，
+      也可以出现在基金持仓、基金配置比例、
+      基金交易金额等不同上下文中。
+
+
+  股票:
+    candidates:
+      - stock_product
+      - stock_holding_value
+      - stock_holding_ratio
+      - stock_trade_amount
+
+    resolution:
+      use_context: true
+      clarification_if_context_insufficient: true
+
+    explanation: >
+      “股票”既可以指产品类别，
+      也可能指股票持仓、股票配置或股票交易。
+
+
+  客户:
+    candidates:
+      - customer_entity
+      - customer_count
+
+    resolution:
+      use_context: true
+      clarification_if_context_insufficient: false
+
+    explanation: >
+      “客户”在筛选语境中通常指客户实体，
+      在“多少客户”等统计语境中映射到客户数指标。
+
+
+global_ambiguity_rules:
+
+  no_forced_guess:
+    enabled: true
+    description: >
+      当一个业务词存在多个合理解释且上下文不足时，
+      Agent 不得自行猜测最终含义。
+
+  use_context_first:
+    enabled: true
+    description: >
+      若问题上下文已经明确指标、维度、时间或产品语义，
+      可以优先利用上下文消除歧义。
+
+  clarification_on_material_difference:
+    enabled: true
+    description: >
+      当不同解释会显著改变 SQL、
+      统计口径或业务结论时，必须触发澄清。
+
+  configurable_thresholds:
+    enabled: true
+    description: >
+      高资产、活跃、大额等依赖阈值的概念，
+      优先采用参数化规则，不永久写死。

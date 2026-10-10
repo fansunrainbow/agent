@@ -1,0 +1,1585 @@
+metrics:
+
+  customer_count:
+    name: 客户数
+    domain: customer
+
+    description: >
+      满足当前筛选条件的客户数量。
+
+    source_tables:
+      - ads_cust_info_d
+    source_fields:
+      - pty_id
+
+    expression: >
+      COUNT(DISTINCT pty_id)
+
+    grain:
+      - customer
+
+    time_semantics: snapshot
+
+    aggregation:
+      default: count_distinct
+      outer: count_distinct
+    distinct_key: pty_id
+
+    aliases:
+      - 客户数
+      - 客户数量
+      - 客户人数
+
+    null_policy: exclude_null_customer_id
+
+    explain:
+      formula_text: 客户数 = 去重后的客户号数量
+      unit: 人
+      decimal_places: 0
+
+
+  total_asset:
+    name: 客户总资产
+    domain: asset
+
+    description: >
+      客户普通账户总资产与信用账户净资产之和。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+      - fc_pur_aset
+
+    expression: >
+      COALESCE(nm_tot_aset, 0)
+      + COALESCE(fc_pur_aset, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+      customer_period: avg
+
+    period_semantics:
+      point_in_time: latest
+      average: avg
+      end_of_period: last
+      start_of_period: first
+
+    aliases:
+      - 总资产
+      - 客户资产
+      - 资产规模
+      - 当前资产
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 总资产 = 普通账户总资产 + 信用账户净资产
+      unit: 元
+      decimal_places: 2
+
+
+  cash_asset:
+    name: 客户现金资产
+    domain: asset
+
+    description: >
+      客户普通账户现金资产与信用账户现金资产之和。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_bal
+      - fc_bal
+
+    expression: >
+      COALESCE(nm_bal, 0)
+      + COALESCE(fc_bal, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 现金资产
+      - 客户现金资产
+      - 现金余额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 现金资产 = 普通账户现金资产 + 信用账户现金资产
+      unit: 元
+      decimal_places: 2
+
+
+  average_total_asset:
+    name: 日均资产
+    domain: asset
+
+    description: >
+      指定统计期间内客户总资产累计值除以该统计期间的自然日天数。
+      该口径与官方 Q&A 中“日均资产”的计算规则保持一致。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+      - fc_pur_aset
+      - data_dt
+
+    expression: >
+      SUM(
+        COALESCE(nm_tot_aset, 0)
+        + COALESCE(fc_pur_aset, 0)
+      )
+      / calendar_day_count
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: calendar_day_average
+
+    aggregation:
+      default: custom
+
+    aliases:
+      - 日均资产
+      - 日均总资产
+
+    null_policy: treat_missing_day_as_zero_by_calendar_denominator
+
+    constraints:
+      required_time_range: true
+      required_calendar_day_count: true
+
+    explain:
+      formula_text: 日均资产 = 统计期间每日资产累计值 / 统计期间自然日天数
+      unit: 元
+      decimal_places: 2
+
+
+  observed_average_total_asset:
+    name: 有效快照日均资产
+    domain: asset
+
+    description: >
+      指定统计期间内，仅对资产表实际存在的日快照记录计算
+      客户每日总资产的算术平均值。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+      - fc_pur_aset
+
+    expression: >
+      AVG(
+        COALESCE(nm_tot_aset, 0)
+        + COALESCE(fc_pur_aset, 0)
+      )
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: observed_snapshot_average
+
+    aggregation:
+      default: avg
+
+    aliases:
+      - 有效快照日均资产
+      - 快照平均资产
+      - 有记录日均资产
+
+    null_policy: treat_as_zero
+
+    constraints:
+      required_time_range: true
+
+    explain:
+      formula_text: 有效快照日均资产 = 实际存在的每日资产快照总资产的算术平均值
+      unit: 元
+      decimal_places: 2
+
+
+  holding_market_value:
+    name: 持仓市值
+    domain: holding
+
+    description: >
+      客户持有产品的市场价值。
+
+    source_tables:
+      - dwd_cust_hold_d
+
+    source_fields:
+      - mkt_val
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 持仓市值
+      - 市值
+      - 持有市值
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 持仓市值 = 持仓记录中的市场价值
+      unit: 元
+      decimal_places: 2
+
+
+  buy_amount:
+    name: 买入金额
+    domain: trading
+
+    description: >
+      客户买入交易金额。
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - buy_amt
+
+    expression: >
+      COALESCE(buy_amt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 买入金额
+      - 买入额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 买入金额 = 买入交易金额之和
+      unit: 元
+      decimal_places: 2
+
+
+  sell_amount:
+    name: 卖出金额
+    domain: trading
+
+    description: >
+      客户卖出交易金额。
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - sell_amt
+
+    expression: >
+      COALESCE(sell_amt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 卖出金额
+      - 卖出额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 卖出金额 = 卖出交易金额之和
+      unit: 元
+      decimal_places: 2
+
+
+  trade_amount:
+    name: 交易金额
+    domain: trading
+
+    description: >
+      客户买入金额与卖出金额之和。
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - buy_amt
+      - sell_amt
+
+    expression: >
+      COALESCE(buy_amt, 0)
+      + COALESCE(sell_amt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 交易额
+      - 成交额
+      - 交易金额
+      - 买卖金额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 交易金额 = 买入金额 + 卖出金额
+      unit: 元
+      decimal_places: 2
+
+
+  trade_count:
+    name: 交易次数
+    domain: trading
+
+    description: >
+      客户买入次数与卖出次数之和。
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - buy_cnt
+      - sell_cnt
+
+    expression: >
+      COALESCE(buy_cnt, 0)
+      + COALESCE(sell_cnt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 交易次数
+      - 成交次数
+      - 买卖次数
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 交易次数 = 买入次数 + 卖出次数
+      unit: 次
+      decimal_places: 0
+
+
+  net_inflow:
+    name: 净流入
+    domain: fund_flow
+
+    description: >
+      客户资金和证券等流入合计减去流出合计。
+
+    source_tables:
+      - dws_cust_fin_d
+
+    source_fields:
+      - cash_in
+      - cash_out
+      - tran_in
+      - tran_out
+      - assign_in
+      - assign_out
+
+    expression: >
+      COALESCE(cash_in, 0)
+      + COALESCE(tran_in, 0)
+      + COALESCE(assign_in, 0)
+      - COALESCE(cash_out, 0)
+      - COALESCE(tran_out, 0)
+      - COALESCE(assign_out, 0)
+
+    grain:
+      - customer
+      - date
+      - account_source
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 净流入
+      - 净资金流入
+      - 资金净流入
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 净流入 = 总流入 - 总流出
+      unit: 元
+      decimal_places: 2
+  normal_total_asset:
+    name: 普通账户总资产
+    domain: asset
+
+    description: >
+      客户普通账户总资产。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+
+    expression: >
+      COALESCE(nm_tot_aset, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 普通账户总资产
+      - 普通资产
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 普通账户总资产 = nm_tot_aset
+      unit: 元
+      decimal_places: 2
+
+
+  credit_net_asset:
+    name: 信用账户净资产
+    domain: asset
+
+    description: >
+      客户信用账户净资产。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - fc_pur_aset
+
+    expression: >
+      COALESCE(fc_pur_aset, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 信用账户净资产
+      - 信用净资产
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 信用账户净资产 = fc_pur_aset
+      unit: 元
+      decimal_places: 2
+
+
+  normal_cash_balance:
+    name: 普通账户现金资产
+    domain: asset
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_bal
+
+    expression: >
+      COALESCE(nm_bal, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 普通账户现金
+      - 普通账户现金资产
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 普通账户现金资产 = nm_bal
+      unit: 元
+      decimal_places: 2
+
+
+  credit_cash_balance:
+    name: 信用账户现金资产
+    domain: asset
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - fc_bal
+
+    expression: >
+      COALESCE(fc_bal, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 信用账户现金
+      - 信用账户现金资产
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 信用账户现金资产 = fc_bal
+      unit: 元
+      decimal_places: 2
+
+
+  holding_quantity:
+    name: 持仓数量
+    domain: holding
+
+    source_tables:
+      - dwd_cust_hold_d
+
+    source_fields:
+      - hold_cnt
+
+    expression: >
+      COALESCE(hold_cnt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 持仓数量
+      - 持有份额
+      - 持仓份额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 持仓数量 = hold_cnt
+      unit: 份
+      decimal_places: 4
+
+
+  buy_count:
+    name: 买入次数
+    domain: trading
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - buy_cnt
+
+    expression: >
+      COALESCE(buy_cnt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 买入次数
+      - 买入笔数
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 买入次数 = buy_cnt
+      unit: 次
+      decimal_places: 0
+
+
+  sell_count:
+    name: 卖出次数
+    domain: trading
+
+    source_tables:
+      - dwd_cust_tran_d
+
+    source_fields:
+      - sell_cnt
+
+    expression: >
+      COALESCE(sell_cnt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+      - account_source
+      - currency
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 卖出次数
+      - 卖出笔数
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 卖出次数 = sell_cnt
+      unit: 次
+      decimal_places: 0
+
+
+  total_inflow:
+    name: 总流入
+    domain: fund_flow
+
+    source_tables:
+      - dws_cust_fin_d
+
+    source_fields:
+      - cash_in
+      - tran_in
+      - assign_in
+
+    expression: >
+      COALESCE(cash_in, 0)
+      + COALESCE(tran_in, 0)
+      + COALESCE(assign_in, 0)
+
+    grain:
+      - customer
+      - date
+      - account_source
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 总流入
+      - 资金流入
+      - 流入金额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 总流入 = 现金转入 + 证券转入 + 指定转入
+      unit: 元
+      decimal_places: 2
+
+
+  total_outflow:
+    name: 总流出
+    domain: fund_flow
+
+    source_tables:
+      - dws_cust_fin_d
+
+    source_fields:
+      - cash_out
+      - tran_out
+      - assign_out
+
+    expression: >
+      COALESCE(cash_out, 0)
+      + COALESCE(tran_out, 0)
+      + COALESCE(assign_out, 0)
+
+    grain:
+      - customer
+      - date
+      - account_source
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 总流出
+      - 资金流出
+      - 流出金额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 总流出 = 现金转出 + 证券转出 + 撤指定转出
+      unit: 元
+      decimal_places: 2
+
+
+  average_customer_age:
+    name: 客户平均年龄
+    domain: customer
+
+    source_tables:
+      - ads_cust_info_d
+
+    source_fields:
+      - cust_age
+
+    expression: >
+      AVG(cust_age)
+
+    grain:
+      - customer_group
+
+    time_semantics: snapshot
+
+    aggregation:
+      default: avg
+
+    aliases:
+      - 平均年龄
+      - 客户平均年龄
+
+    null_policy: exclude_null
+
+    explain:
+      formula_text: 客户平均年龄 = 客户年龄的算术平均值
+      unit: 岁
+      decimal_places: 2
+
+
+  period_start_asset:
+    name: 期初资产
+    domain: asset
+
+    description: >
+      指定统计期间内客户最早有效日期的总资产。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+      - fc_pur_aset
+
+    base_metric: total_asset
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: period_start
+
+    aggregation:
+      default: first
+
+    aliases:
+      - 期初资产
+      - 期初总资产
+
+    constraints:
+      required_time_range: true
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 期初资产 = 统计期间首个有效日的总资产
+      unit: 元
+      decimal_places: 2
+
+
+  period_end_asset:
+    name: 期末资产
+    domain: asset
+
+    description: >
+      指定统计期间内客户最后有效日期的总资产。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    source_fields:
+      - nm_tot_aset
+      - fc_pur_aset
+
+    base_metric: total_asset
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: period_end
+
+    aggregation:
+      default: last
+
+    aliases:
+      - 期末资产
+      - 期末总资产
+
+    constraints:
+      required_time_range: true
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 期末资产 = 统计期间最后有效日的总资产
+      unit: 元
+      decimal_places: 2
+
+
+  asset_change:
+    name: 资产变化额
+    domain: asset
+
+    description: >
+      客户指定期间期末资产与期初资产之差。
+
+    source_tables:
+      - dws_cust_aset_d
+
+    derived_from:
+      - period_start_asset
+      - period_end_asset
+
+    expression: >
+      period_end_asset - period_start_asset
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: period_change
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 资产变化
+      - 资产变化额
+      - 资产增减额
+
+    constraints:
+      required_time_range: true
+
+    explain:
+      formula_text: 资产变化额 = 期末资产 - 期初资产
+      unit: 元
+      decimal_places: 2
+
+
+  asset_change_rate:
+    name: 资产变化率
+    domain: asset
+
+    description: >
+      客户指定期间资产变化额相对于期初资产的比例。
+
+    derived_from:
+      - period_start_asset
+      - period_end_asset
+
+    expression: >
+      (period_end_asset - period_start_asset)
+      / NULLIF(period_start_asset, 0)
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: period_change
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 资产变化率
+      - 资产增长率
+      - 资产增幅
+
+    constraints:
+      required_time_range: true
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 资产变化率 = (期末资产 - 期初资产) / 期初资产
+      unit: 比例
+      decimal_places: 4
+
+
+  cash_asset_ratio:
+    name: 现金资产占比
+    domain: allocation
+
+    description: >
+      客户现金资产占客户总资产的比例。
+
+    derived_from:
+      - cash_asset
+      - total_asset
+
+    expression: >
+      cash_asset / NULLIF(total_asset, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 现金资产占比
+      - 现金占比
+      - 现金比例
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 现金资产占比 = 现金资产 / 总资产
+      unit: 比例
+      decimal_places: 4
+  stock_holding_value:
+    name: 股票持仓市值
+    domain: holding
+
+    description: >
+      客户持有一级产品分类为“股票”的产品市值合计。
+
+    source_tables:
+      - dwd_cust_hold_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_hold_d.mkt_val
+      - dwd_cust_hold_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_hold_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '股票'
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 股票持仓
+      - 股票持仓市值
+      - 股票市值
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 股票持仓市值 = 股票类产品持仓市值之和
+      unit: 元
+      decimal_places: 2
+
+
+  fund_holding_value:
+    name: 基金持仓市值
+    domain: holding
+
+    description: >
+      客户持有一级产品分类为“开放式基金”的产品市值合计。
+
+    source_tables:
+      - dwd_cust_hold_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_hold_d.mkt_val
+      - dwd_cust_hold_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_hold_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '开放式基金'
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 基金持仓
+      - 基金持仓市值
+      - 基金市值
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 基金持仓市值 = 开放式基金类产品持仓市值之和
+      unit: 元
+      decimal_places: 2
+
+
+  bond_holding_value:
+    name: 债券持仓市值
+    domain: holding
+
+    description: >
+      客户持有一级产品分类为“债券”的产品市值合计。
+
+    source_tables:
+      - dwd_cust_hold_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_hold_d.mkt_val
+      - dwd_cust_hold_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_hold_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '债券'
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 债券持仓
+      - 债券持仓市值
+      - 债券市值
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 债券持仓市值 = 债券类产品持仓市值之和
+      unit: 元
+      decimal_places: 2
+
+
+  wealth_management_holding_value:
+    name: 理财产品持仓市值
+    domain: holding
+
+    description: >
+      客户持有一级产品分类为“理财产品”的产品市值合计。
+
+    source_tables:
+      - dwd_cust_hold_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_hold_d.mkt_val
+      - dwd_cust_hold_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_hold_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '理财产品'
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 理财持仓
+      - 理财产品持仓
+      - 理财产品市值
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 理财产品持仓市值 = 理财产品类持仓市值之和
+      unit: 元
+      decimal_places: 2
+
+
+  private_fund_holding_value:
+    name: 私募持仓市值
+    domain: holding
+
+    description: >
+      客户持有一级产品分类为“证券投资类私募”的产品市值合计。
+
+    source_tables:
+      - dwd_cust_hold_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_hold_d.mkt_val
+      - dwd_cust_hold_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_hold_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '证券投资类私募'
+
+    expression: >
+      COALESCE(mkt_val, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 私募持仓
+      - 私募持仓市值
+      - 证券投资类私募持仓
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 私募持仓市值 = 证券投资类私募产品持仓市值之和
+      unit: 元
+      decimal_places: 2
+  stock_holding_ratio:
+    name: 股票持仓占比
+    domain: allocation
+
+    description: >
+      客户股票类产品持仓市值占全部产品持仓市值的比例。
+
+    derived_from:
+      - stock_holding_value
+      - holding_market_value
+
+    expression: >
+      stock_holding_value
+      / NULLIF(holding_market_value, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 股票持仓占比
+      - 股票占比
+      - 股票配置比例
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 股票持仓占比 = 股票持仓市值 / 总持仓市值
+      unit: 比例
+      decimal_places: 4
+
+
+  fund_holding_ratio:
+    name: 基金持仓占比
+    domain: allocation
+
+    description: >
+      客户开放式基金持仓市值占全部产品持仓市值的比例。
+
+    derived_from:
+      - fund_holding_value
+      - holding_market_value
+
+    expression: >
+      fund_holding_value
+      / NULLIF(holding_market_value, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 基金持仓占比
+      - 基金占比
+      - 基金配置比例
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 基金持仓占比 = 基金持仓市值 / 总持仓市值
+      unit: 比例
+      decimal_places: 4
+
+
+  bond_holding_ratio:
+    name: 债券持仓占比
+    domain: allocation
+
+    description: >
+      客户债券类产品持仓市值占全部产品持仓市值的比例。
+
+    derived_from:
+      - bond_holding_value
+      - holding_market_value
+
+    expression: >
+      bond_holding_value
+      / NULLIF(holding_market_value, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 债券持仓占比
+      - 债券占比
+      - 债券配置比例
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 债券持仓占比 = 债券持仓市值 / 总持仓市值
+      unit: 比例
+      decimal_places: 4
+
+
+  wealth_management_holding_ratio:
+    name: 理财产品持仓占比
+    domain: allocation
+
+    description: >
+      客户理财产品持仓市值占全部产品持仓市值的比例。
+
+    derived_from:
+      - wealth_management_holding_value
+      - holding_market_value
+
+    expression: >
+      wealth_management_holding_value
+      / NULLIF(holding_market_value, 0)
+
+    grain:
+      - customer
+      - date
+
+    time_semantics: daily_snapshot
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 理财持仓占比
+      - 理财占比
+      - 理财配置比例
+
+    null_policy: denominator_zero_returns_null
+
+    explain:
+      formula_text: 理财产品持仓占比 = 理财产品持仓市值 / 总持仓市值
+      unit: 比例
+      decimal_places: 4
+
+
+  stock_trade_amount:
+    name: 股票交易金额
+    domain: trading
+
+    description: >
+      一级产品分类为“股票”的产品买入金额与卖出金额之和。
+
+    source_tables:
+      - dwd_cust_tran_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_tran_d.buy_amt
+      - dwd_cust_tran_d.sell_amt
+      - dwd_cust_tran_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_tran_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '股票'
+
+    expression: >
+      COALESCE(buy_amt, 0)
+      + COALESCE(sell_amt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 股票交易额
+      - 股票成交额
+      - 股票交易金额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 股票交易金额 = 股票买入金额 + 股票卖出金额
+      unit: 元
+      decimal_places: 2
+
+
+  fund_trade_amount:
+    name: 基金交易金额
+    domain: trading
+
+    description: >
+      一级产品分类为“开放式基金”的产品买入金额与卖出金额之和。
+
+    source_tables:
+      - dwd_cust_tran_d
+      - dim_product
+
+    source_fields:
+      - dwd_cust_tran_d.buy_amt
+      - dwd_cust_tran_d.sell_amt
+      - dwd_cust_tran_d.prdt_id
+      - dim_product.prdt_id
+      - dim_product.up_prdt_type_name
+
+    join:
+      left_table: dwd_cust_tran_d
+      right_table: dim_product
+      on: prdt_id
+
+    filter: >
+      up_prdt_type_name = '开放式基金'
+
+    expression: >
+      COALESCE(buy_amt, 0)
+      + COALESCE(sell_amt, 0)
+
+    grain:
+      - customer
+      - date
+      - product
+
+    time_semantics: daily_flow
+
+    aggregation:
+      default: sum
+
+    aliases:
+      - 基金交易额
+      - 基金成交额
+      - 基金交易金额
+
+    null_policy: treat_as_zero
+
+    explain:
+      formula_text: 基金交易金额 = 基金买入金额 + 基金卖出金额
+      unit: 元
+      decimal_places: 2
+
+
+
+  asset_profit:
+    name: 资产盈亏
+    domain: asset
+
+    description: >
+      客户在指定统计期间内的资产盈亏。
+      按期末资产减期初资产，并对期间资金流入和流出进行调整。
+
+    derived_from:
+      - period_start_asset
+      - period_end_asset
+      - total_inflow
+      - total_outflow
+
+    expression: >
+      period_end_asset
+      - period_start_asset
+      + total_outflow
+      - total_inflow
+
+    grain:
+      - customer
+      - period
+
+    time_semantics: period_profit
+
+    aggregation:
+      default: none
+
+    aliases:
+      - 盈亏
+      - 资产盈亏
+      - 客户盈亏
+      - 期间盈亏
+
+    null_policy: treat_missing_flow_as_zero
+
+    constraints:
+      required_time_range: true
+
+    explain:
+      formula_text: 盈亏 = 期末资产 - 期初资产 + 期间总流出 - 期间总流入
+      unit: 元
+      decimal_places: 2

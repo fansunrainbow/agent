@@ -1,0 +1,76 @@
+{
+  "case_id": "X001",
+  "category": "Coverage",
+  "description": "补充trend_analysis覆盖",
+  "input": "查看2026年Q1总资产变化趋势。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "trend_analysis",
+    "subject": "customer",
+
+    "metrics": [
+      "total_asset"
+    ],
+
+    "dimensions": [
+      "date"
+    ],
+
+    "filters": [],
+
+    "entities": [],
+
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+
+    "group_by": [
+      "date"
+    ],
+
+    "having": [],
+
+    "order_by": [
+      {
+        "field": "date",
+        "direction": "asc"
+      }
+    ],
+
+    "limit": null,
+
+    "output": {
+      "mode": "aggregate",
+      "format": "table",
+      "include_details": false,
+      "include_explanation": true
+    },
+
+    "ambiguities": [],
+
+    "assumptions": [],
+
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

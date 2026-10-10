@@ -1,0 +1,36 @@
+{
+  "tag": {
+    "high_asset": "6fe8908fb8391ce6630199a3eb696f01a598078b7493fc59d071b2456ed910f5",
+    "high_cash_ratio": "53015dec29322782d4ea5af797da082f2b8a2a9a81775e4b4311051f6e1993c1",
+    "stock_preference": "7f06a23404baa24e139420a6ce33c559d919ca33b58d26b069477992b0725a0c",
+    "fund_low_allocation": "4bc89771b8c33ed4d72a75b9a17587bb797a1a5690895656a51ef0d7768759f5",
+    "trade_active": "fdeca75740cc37bab4477b847f1c22504464d91b0cf1c22f175f0fb02fc1e710",
+    "net_inflow": "051866a6f2b380de3735cd768d7801e163dcf3e45e9598dd34991cda4a030c18",
+    "net_outflow": "958ac8fd68bd5a56f66d8eb7910a2e65b45e7ad642b801d24e2047fe6f6b6c2f",
+    "asset_growth": "4e0a3374c16d8996a53080a50c4a0f089e5c525e6ebf2aa8ccf634c421c00b98",
+    "asset_decline": "e991eac4d4eb20ade07aacb4c959d92b41601a0d95c67db859c5a8e204defcd8"
+  },
+  "segment": {
+    "high_asset_low_fund": "03441b71a713e46ec5e077e5aeba4604d81be2f31c829f7c91843df7abb59fcd",
+    "high_level_outflow_decline": "2f09c47c1fa0ab2fb49d158122a93e48e9043d13efabe6973389d292c71a1651",
+    "fund_low_allocation": "1bb36cfc9c0ffeb8372e8115975f7d241bd3941d89d55ca59a65dcb1db928649",
+    "positive_flow_or_growth": "552d3b9649de87934ee67a80757d816eae600dc90a75453746d31966c3fe7d57",
+    "active_non_outflow": "7c993e92024bc206d9dcac39bcdcc686ceaf2699305eb639523c7495335e416a"
+  },
+  "opportunity": {
+    "fund_allocation_opportunity": "a28ecb6e74e7adb840e9a4f2e000de056a54c75d617b4bcca3dc7c62ba0722af",
+    "cash_allocation_opportunity": "4b9a154e17db723b8dde3515c3806155ee36b476e435cb89880b991197d1786f",
+    "active_concentrated_trading": "7cf2f66c3a26bc1ff6c3d7516bb052186a2963fe16157792d5af11913d923f6e",
+    "high_level_outflow_attention": "f8780eef387848cadf62ba55dae2680b06d85df02cb1b7e3f73b58031663a603",
+    "asset_decline_outflow_attention": "a55f8ddf2171a0fd138e9542cb2a31b2fd7d1592e5b21d885f76850460d7931c",
+    "large_recent_inflow_followup": "c62ec8c714477cd5133daf384df371a1022eafcd0611f4280878e484f41c40ce"
+  },
+  "strategy": {
+    "improve_fund_allocation": "7d89b92a08b8837b64701a1b07b8325dd064cf9c53522cbf02a641714536f84a",
+    "optimize_asset_allocation": "9e3b05e1d9875f7dc7ccdb14617aa70aa3f2d78630ecef8ec09e5f6bea0d814a",
+    "discuss_product_structure": "8d8e79d5b9127017f387777c96275e3c873cc57d85b1ff8ebaa4eebbb13d1801",
+    "maintain_high_level_customer": "3a955b8cf218e831f073749bb96a7563b78170779717ff9bb9cd1b383ac384d2",
+    "monitor_asset_and_flow": "33be012c9af28ad18fd000d0ebbe1d5800cc379ac8468d151b6be86f81201b56",
+    "follow_up_recent_inflow": "1545129b84e85107f3bb4e44bb4c6029824a670d2ac31e424903aef48fbf1337"
+  }
+}

@@ -1,0 +1,65 @@
+relations:
+  held_product:
+    relation_type: association
+    source_entity: customer
+    target_entity: product
+    source_table: ads_cust_info_d
+    target_table: dwd_cust_hold_d
+    correlation_key: pty_id
+    entity_field: prdt_id
+    verified_join: customer_to_holding
+    cardinality: one_to_many
+    grain_strategy: correlated_exists
+    enabled: true
+
+  traded_product:
+    relation_type: association
+    source_entity: customer
+    target_entity: product
+    source_table: ads_cust_info_d
+    target_table: dwd_cust_tran_d
+    correlation_key: pty_id
+    entity_field: prdt_id
+    verified_join: customer_to_transaction
+    cardinality: one_to_many
+    grain_strategy: correlated_exists
+    enabled: true
+
+  product:
+    relation_type: association
+    source_entity: customer
+    target_entity: product
+    source_table: ads_cust_info_d
+    target_table: dwd_cust_hold_d
+    correlation_key: pty_id
+    entity_field: prdt_id
+    verified_join: customer_to_holding
+    cardinality: one_to_many
+    grain_strategy: correlated_exists
+    enabled: true
+
+  branch:
+    relation_type: dimension
+    source_entity: customer
+    target_entity: branch
+    source_table: ads_cust_info_d
+    target_table: dim_branch
+    target_dimension: branch
+    entity_field: org_id
+    verified_join: branch_to_customer
+    cardinality: many_to_one
+    grain_strategy: verified_dimension_join
+    enabled: true
+
+  parent_branch:
+    relation_type: hierarchy_dimension
+    source_entity: customer
+    target_entity: parent_branch
+    source_table: ads_cust_info_d
+    target_table: dim_branch
+    target_dimension: parent_branch
+    entity_field: up_org_id
+    verified_join: branch_to_customer
+    cardinality: many_to_one
+    grain_strategy: verified_dimension_join
+    enabled: true

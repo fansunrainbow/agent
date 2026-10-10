@@ -1,0 +1,79 @@
+{
+  "case_id": "A001",
+  "category": "Ambiguous",
+  "description": "近期活跃优质客户",
+  "input": "近期活跃优质客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "近期",
+        "type": "time",
+        "reason": "未指定时间范围",
+        "question": "请确认近期范围",
+        "candidates": [
+          "last_7_days",
+          "last_30_days",
+          "last_3_months"
+        ]
+      },
+      {
+        "term": "活跃",
+        "type": "business_rule",
+        "reason": "活跃存在多种定义",
+        "question": "请确认活跃口径",
+        "candidates": [
+          "trade_count",
+          "trade_amount"
+        ]
+      },
+      {
+        "term": "优质客户",
+        "type": "business_rule",
+        "reason": "缺少统一口径",
+        "question": "请确认优质客户口径",
+        "candidates": [
+          "customer_level",
+          "average_total_asset",
+          "composite_business_rule"
+        ]
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 0.95,
+      "metrics": 0.6,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 0.6
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

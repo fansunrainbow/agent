@@ -1,0 +1,74 @@
+{
+  "case_id": "T003",
+  "category": "Multi-turn",
+  "description": "多轮上下文T003",
+  "input": "多轮对话测试T003",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "metric_query",
+    "subject": "customer",
+    "metrics": [
+      "average_total_asset"
+    ],
+    "dimensions": [
+      "city",
+      "customer_level"
+    ],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "dimension",
+        "target": "city",
+        "operator": "eq",
+        "value": "苏州",
+        "source": "explicit",
+        "confidence": 1.0
+      },
+      {
+        "id": "f2",
+        "type": "concept",
+        "target": "diamond_customer",
+        "operator": "eq",
+        "value": true,
+        "source": "dictionary",
+        "confidence": 1.0
+      }
+    ],
+    "entities": [],
+    "time_range": {
+      "type": "quarter",
+      "year": 2026,
+      "quarter": 1
+    },
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": "plan_T002",
+      "operation": "modify"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

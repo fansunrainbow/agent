@@ -1,0 +1,74 @@
+tags:
+  high_asset:
+    name: 高资产客户
+    version: "1.0"
+    effective_from: "2026-01-01"
+    effective_to: null
+    source: business_policy
+    defaults: {threshold: 1000000}
+    condition: {feature: average_total_asset, operator: gte, parameter: threshold}
+    explanation_template: "日均资产 {actual} 元达到阈值 {threshold} 元。"
+  high_cash_ratio:
+    name: 高现金占比
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0.5}
+    condition: {feature: cash_asset_ratio, operator: gte, parameter: threshold}
+    explanation_template: "现金资产占比 {actual} 达到阈值 {threshold}。"
+  stock_preference:
+    name: 股票配置较高
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0.5}
+    condition: {feature: stock_holding_ratio, operator: gte, parameter: threshold}
+    explanation_template: "股票持仓占比 {actual} 达到规则阈值 {threshold}。"
+  fund_low_allocation:
+    name: 基金低配置
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    defaults: {threshold: 0.1}
+    condition: {feature: fund_holding_ratio, operator: lt, parameter: threshold}
+    explanation_template: "基金持仓占比 {actual} 低于规则阈值 {threshold}。"
+  trade_active:
+    name: 交易活跃
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 20}
+    condition: {feature: trade_count, operator: gte, parameter: threshold}
+    explanation_template: "统计期交易次数 {actual} 达到规则阈值 {threshold}。"
+  net_inflow:
+    name: 资金净流入
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0}
+    condition: {feature: net_inflow, operator: gt, parameter: threshold}
+    explanation_template: "统计期净流入 {actual} 元大于 {threshold} 元。"
+  net_outflow:
+    name: 资金净流出
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0}
+    condition: {feature: net_inflow, operator: lt, parameter: threshold}
+    explanation_template: "统计期净流入 {actual} 元低于 {threshold} 元。"
+  asset_growth:
+    name: 资产增长
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0}
+    condition: {feature: asset_change_rate, operator: gt, parameter: threshold}
+    explanation_template: "资产变化率 {actual} 高于 {threshold}。"
+  asset_decline:
+    name: 资产下降
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    defaults: {threshold: 0}
+    condition: {feature: asset_change_rate, operator: lt, parameter: threshold}
+    explanation_template: "资产变化率 {actual} 低于 {threshold}。"

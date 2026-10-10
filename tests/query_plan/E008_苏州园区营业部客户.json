@@ -1,0 +1,70 @@
+{
+  "case_id": "E008",
+  "category": "Entity",
+  "description": "苏州园区营业部客户",
+  "input": "苏州园区营业部客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [
+      {
+        "id": "f1",
+        "type": "entity",
+        "target": "branch",
+        "operator": "exists",
+        "source": "entity_resolution",
+        "confidence": 1.0,
+        "value": "B_SZ001"
+      }
+    ],
+    "entities": [
+      {
+        "entity_type": "branch",
+        "surface": "苏州工业园区营业部",
+        "resolution_status": "resolved",
+        "resolved": {
+          "id": "B_SZ001",
+          "name": "苏州工业园区营业部",
+          "entity_type": "branch",
+          "attributes": {}
+        },
+        "confidence": 0.98,
+        "source": "exact_match"
+      }
+    ],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

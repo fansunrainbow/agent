@@ -1,0 +1,53 @@
+policy:
+  suitability_data_available: false
+  allow_specific_product_recommendation: false
+  unsupported_prediction_claims: [risk_preference, purchase_intent, churn_probability, response_probability]
+strategies:
+  improve_fund_allocation:
+    name: 基金配置沟通
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    trigger_opportunities: [fund_allocation_opportunity]
+    action: {type: engagement, description: "围绕基金类别配置比例和整体资产结构开展沟通。"}
+    prohibited: [specific_product_recommendation_without_suitability, suitability_claim_without_data]
+  optimize_asset_allocation:
+    name: 资产配置优化沟通
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    trigger_opportunities: [cash_allocation_opportunity]
+    action: {type: engagement, description: "围绕现金与各产品类别配置结构开展沟通。"}
+    prohibited: [specific_product_recommendation_without_suitability]
+  discuss_product_structure:
+    name: 产品结构沟通
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    trigger_opportunities: [active_concentrated_trading]
+    action: {type: engagement, description: "围绕当前产品类别集中度进行结构性沟通。"}
+    prohibited: [specific_product_recommendation_without_suitability]
+  maintain_high_level_customer:
+    name: 高等级客户重点维护
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    trigger_opportunities: [high_level_outflow_attention]
+    action: {type: retention_attention, description: "核实资金流出原因并安排客户维护沟通，不推断流失概率。"}
+    prohibited: [claim_churn_probability]
+  monitor_asset_and_flow:
+    name: 资产与资金流出关注
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    trigger_opportunities: [asset_decline_outflow_attention]
+    action: {type: attention, description: "关注资产变化与资金流情况并开展事实核实。"}
+    prohibited: [claim_churn_probability]
+  follow_up_recent_inflow:
+    name: 近期资金流入跟进
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    trigger_opportunities: [large_recent_inflow_followup]
+    action: {type: follow_up, description: "对近期资金流入进行经营跟进和需求确认。"}
+    prohibited: [claim_purchase_intent, specific_product_recommendation_without_suitability]

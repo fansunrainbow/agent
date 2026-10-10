@@ -1,0 +1,58 @@
+{
+  "case_id": "A010",
+  "category": "Ambiguous",
+  "description": "大客户",
+  "input": "大客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "needs_clarification",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [],
+    "filters": [],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [
+      {
+        "term": "大客户",
+        "type": "business_rule",
+        "reason": "缺少统一定义",
+        "question": "请确认大客户口径",
+        "candidates": [
+          "average_total_asset",
+          "customer_level",
+          "composite_business_rule"
+        ]
+      }
+    ],
+    "assumptions": [],
+    "confidence": {
+      "overall": 0.5,
+      "intent": 0.95,
+      "metrics": 0.6,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 0.5,
+      "filters": 0.6
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

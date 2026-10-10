@@ -1,0 +1,55 @@
+intents:
+
+  customer_selection:
+    name: 客户筛选
+    description: >
+      根据一个或多个业务条件筛选满足要求的客户集合。
+    default_subject: customer
+
+  metric_query:
+    name: 指标查询
+    description: >
+      查询单个或多个标准指标的值。
+    default_subject: customer
+
+  group_analysis:
+    name: 分组分析
+    description: >
+      按一个或多个维度对指标进行分组统计。
+    default_subject: customer
+
+  trend_analysis:
+    name: 趋势分析
+    description: >
+      在指定时间范围内按时间粒度观察指标变化趋势。
+    default_subject: customer
+
+  ranking:
+    name: 排名分析
+    description: >
+      按一个或多个指标排序，并可获取 Top-K 结果。
+    default_subject: customer
+
+  entity_lookup:
+    name: 实体查询
+    description: >
+      查询产品、机构、客户等高基数实体及其基本信息。
+    default_subject: null
+
+  customer_profile:
+    name: 客户画像
+    description: >
+      汇总指定客户的基础属性、资产、持仓、交易和资金情况。
+    default_subject: customer
+
+  segment_analysis:
+    name: 客群分析
+    description: >
+      对某个客户群体进行规模、结构或指标分析。
+    default_subject: customer
+
+  comparison:
+    name: 对比分析
+    description: >
+      比较不同客户群、时间段、机构或维度之间的指标差异。
+    default_subject: customer

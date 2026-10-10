@@ -1,0 +1,201 @@
+aliases:
+
+  customer_count:
+    - 客户数
+    - 客户数量
+    - 客户人数
+    - 人数
+
+  average_customer_age:
+    - 平均年龄
+    - 客户平均年龄
+
+  normal_total_asset:
+    - 普通账户总资产
+    - 普通资产
+
+  credit_net_asset:
+    - 信用账户净资产
+    - 信用净资产
+
+  total_asset:
+    - 总资产
+    - 客户总资产
+    - 客户资产
+    - 资产规模
+    - 当前资产
+
+  normal_cash_balance:
+    - 普通账户现金
+    - 普通账户现金资产
+
+  credit_cash_balance:
+    - 信用账户现金
+    - 信用账户现金资产
+
+  cash_asset:
+    - 现金资产
+    - 客户现金资产
+    - 现金余额
+
+  average_total_asset:
+    - 日均资产
+    - 日均总资产
+    - 每日平均资产
+    - 平均资产
+
+  observed_average_total_asset:
+    - 有效快照日均资产
+    - 快照平均资产
+    - 有记录日均资产
+
+  period_start_asset:
+    - 期初资产
+    - 期初总资产
+
+  period_end_asset:
+    - 期末资产
+    - 期末总资产
+
+  asset_change:
+    - 资产变化
+    - 资产变化额
+    - 资产增减额
+
+  asset_change_rate:
+    - 资产变化率
+    - 资产增长率
+    - 资产增幅
+
+  cash_asset_ratio:
+    - 现金资产占比
+    - 现金占比
+    - 现金比例
+
+  holding_market_value:
+    - 持仓市值
+    - 市值
+    - 持有市值
+    - 总持仓市值
+
+  holding_quantity:
+    - 持仓数量
+    - 持有数量
+    - 持有份额
+    - 持仓份额
+
+  stock_holding_value:
+    - 股票持仓
+    - 股票持仓市值
+    - 股票市值
+
+  fund_holding_value:
+    - 基金持仓
+    - 基金持仓市值
+    - 基金市值
+
+  bond_holding_value:
+    - 债券持仓
+    - 债券持仓市值
+    - 债券市值
+
+  wealth_management_holding_value:
+    - 理财持仓
+    - 理财产品持仓
+    - 理财产品市值
+
+  private_fund_holding_value:
+    - 私募持仓
+    - 私募持仓市值
+    - 证券投资类私募持仓
+
+  stock_holding_ratio:
+    - 股票持仓占比
+    - 股票占比
+    - 股票配置比例
+    - 股票配置占比
+
+  fund_holding_ratio:
+    - 基金持仓占比
+    - 基金占比
+    - 基金配置比例
+    - 基金配置占比
+    - 基金配置
+
+  bond_holding_ratio:
+    - 债券持仓占比
+    - 债券占比
+    - 债券配置比例
+    - 债券配置占比
+
+  wealth_management_holding_ratio:
+    - 理财持仓占比
+    - 理财占比
+    - 理财配置比例
+    - 理财配置占比
+
+  buy_amount:
+    - 买入金额
+    - 买入额
+    - 买入成交额
+
+  sell_amount:
+    - 卖出金额
+    - 卖出额
+    - 卖出成交额
+
+  trade_amount:
+    - 交易额
+    - 成交额
+    - 交易金额
+    - 买卖金额
+    - 成交金额
+    - 交易量
+
+  stock_trade_amount:
+    - 股票交易额
+    - 股票成交额
+    - 股票交易金额
+    - 股票交易量
+
+  fund_trade_amount:
+    - 基金交易额
+    - 基金成交额
+    - 基金交易金额
+    - 基金交易量
+
+  buy_count:
+    - 买入次数
+    - 买入笔数
+
+  sell_count:
+    - 卖出次数
+    - 卖出笔数
+
+  trade_count:
+    - 交易次数
+    - 成交次数
+    - 买卖次数
+    - 交易笔数
+
+  total_inflow:
+    - 总流入
+    - 资金流入
+    - 流入金额
+
+  total_outflow:
+    - 总流出
+    - 资金流出
+    - 流出金额
+
+  net_inflow:
+    - 净流入
+    - 净资金流入
+    - 资金净流入
+    - 净流入金额
+
+  asset_profit:
+    - 盈亏
+    - 资产盈亏
+    - 客户盈亏
+    - 期间盈亏

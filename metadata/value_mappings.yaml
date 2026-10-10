@@ -1,0 +1,161 @@
+mappings:
+
+  customer_level:
+    name: 客户等级
+    source_table: ads_cust_info_d
+    source_field: cust_lvl_cd
+    dictionary_table: dim_public
+    code_type_id: "100"
+
+    values:
+      "1000001": 紫金理财钻石卡客户
+      "1000002": 紫金理财白金卡客户
+      "1000003": 紫金理财金卡客户
+      "1000004": 紫金理财银卡客户
+      "1000005": 紫金理财卡客户
+      "1000006": 空
+
+    semantic_values:
+      diamond: "1000001"
+      platinum: "1000002"
+      gold: "1000003"
+      silver: "1000004"
+      standard: "1000005"
+      empty: "1000006"
+
+
+  customer_status:
+    name: 客户状态
+    source_table: ads_cust_info_d
+    source_field: cust_status
+    dictionary_table: dim_public
+    code_type_id: "200"
+
+    values:
+      "2000001": 正常
+      "2000004": 销户
+      "2000005": 休眠已确认
+
+    semantic_values:
+      normal: "2000001"
+      closed: "2000004"
+      dormant_confirmed: "2000005"
+
+
+  gender:
+    name: 性别
+    source_table: ads_cust_info_d
+    source_field: gender_cd
+    dictionary_table: dim_public
+    code_type_id: "500"
+
+    values:
+      "5000001": 未知
+      "5000002": 男
+      "5000003": 女
+      "5000005": 其他
+
+    semantic_values:
+      unknown: "5000001"
+      male: "5000002"
+      female: "5000003"
+      other: "5000005"
+
+    input_aliases:
+      unknown: [未知, unknown, U]
+      male: [男, male, M]
+      female: [女, female, F]
+      other: [其他, other]
+
+
+  education:
+    name: 学历
+    source_table: ads_cust_info_d
+    source_field: edu_cd
+    dictionary_table: dim_public
+    code_type_id: "600"
+
+    values:
+      "6000001": 未知学历
+      "6000002": 博士
+      "6000003": 硕士
+      "6000004": 学士
+      "6000005": 大专
+      "6000006": 中专
+      "6000007": 高中
+      "6000008": 初中及其以下
+      "6000009": 其他
+
+    semantic_values:
+      unknown: "6000001"
+      doctor: "6000002"
+      master: "6000003"
+      bachelor: "6000004"
+      college: "6000005"
+      secondary_vocational: "6000006"
+      high_school: "6000007"
+      junior_high_or_below: "6000008"
+      other: "6000009"
+
+
+  account_source:
+    name: 账户来源
+    source_fields:
+      - dwd_cust_hold_d.sys_source
+      - dwd_cust_tran_d.sys_source
+      - dws_cust_fin_d.sys_source
+
+    values:
+      nm: 普通账户
+      fc: 信用账户
+
+    semantic_values:
+      normal_account: nm
+      credit_account: fc
+
+
+  product_primary_category:
+    name: 产品一级分类
+    source_table: dim_product
+    source_field: up_prdt_type_name
+
+    values:
+      stock: 股票
+      fund: 开放式基金
+      bond: 债券
+      wealth_management: 理财产品
+      private_fund: 证券投资类私募
+      warrant: 权证
+      derivative: 衍生品
+      otc: OTC产品
+      cash: 现金类
+      precious_metal: 贵金属
+      repo: 回购一级类别
+      hs_multi_financial: 恒生多金融产品
+
+    filtering_rule:
+      preferred_field: up_prdt_type_name
+      reason: >
+        dim_product 中存在部分产品分类 ID 对应多个中文名称的情况，
+        因此一级产品类别优先按 up_prdt_type_name 过滤，
+        不直接依赖 up_prdt_type_id。
+
+
+hierarchies:
+
+  bachelor_or_above:
+    name: 本科及以上
+    dimension: education
+
+    include_codes:
+      - "6000004"
+      - "6000003"
+      - "6000002"
+
+    include_values:
+      - 学士
+      - 硕士
+      - 博士
+
+    description: >
+      本科及以上包括学士、硕士、博士三个学历层级。

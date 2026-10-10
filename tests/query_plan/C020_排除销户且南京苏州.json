@@ -1,0 +1,92 @@
+{
+  "case_id": "C020",
+  "category": "Complex",
+  "description": "排除销户且南京苏州",
+  "input": "排除销户客户，并筛选南京或苏州客户。",
+  "plan": {
+    "version": "1.0",
+    "status": "ready",
+    "intent": "customer_selection",
+    "subject": "customer",
+    "metrics": [],
+    "dimensions": [
+      "customer_status",
+      "city"
+    ],
+    "filters": [
+      {
+        "logic": "and",
+        "conditions": [
+          {
+            "logic": "not",
+            "conditions": [
+              {
+                "id": "f1",
+                "type": "concept",
+                "target": "closed_customer",
+                "operator": "eq",
+                "value": true,
+                "source": "dictionary",
+                "confidence": 1.0
+              }
+            ]
+          },
+          {
+            "logic": "or",
+            "conditions": [
+              {
+                "id": "f2",
+                "type": "dimension",
+                "target": "city",
+                "operator": "eq",
+                "value": "南京",
+                "source": "explicit",
+                "confidence": 1.0
+              },
+              {
+                "id": "f3",
+                "type": "dimension",
+                "target": "city",
+                "operator": "eq",
+                "value": "苏州",
+                "source": "explicit",
+                "confidence": 1.0
+              }
+            ]
+          }
+        ]
+      }
+    ],
+    "entities": [],
+    "time_range": null,
+    "group_by": [],
+    "having": [],
+    "order_by": [],
+    "limit": null,
+    "output": {
+      "mode": "detail",
+      "format": "table",
+      "include_details": true,
+      "include_explanation": true
+    },
+    "ambiguities": [],
+    "assumptions": [],
+    "confidence": {
+      "overall": 1.0,
+      "intent": 1.0,
+      "metrics": 1.0,
+      "dimensions": 1.0,
+      "entities": 1.0,
+      "time": 1.0,
+      "filters": 1.0
+    },
+    "context": {
+      "parent_plan_id": null,
+      "operation": "new"
+    }
+  },
+  "expected": {
+    "valid": true,
+    "error_codes": []
+  }
+}

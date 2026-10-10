@@ -1,0 +1,154 @@
+aliases:
+
+  diamond_customer:
+    - 钻石
+    - 钻石客户
+    - 钻石卡客户
+    - 紫金钻石客户
+    - 紫金理财钻石客户
+    - 紫金理财钻石卡客户
+
+  platinum_customer:
+    - 白金
+    - 白金客户
+    - 白金卡客户
+    - 紫金白金客户
+    - 紫金理财白金客户
+    - 紫金理财白金卡客户
+
+  gold_customer:
+    - 金卡客户
+    - 金卡
+    - 紫金金卡客户
+    - 紫金理财金卡客户
+
+  silver_customer:
+    - 银卡客户
+    - 银卡
+    - 紫金银卡客户
+    - 紫金理财银卡客户
+
+  male_customer:
+    - 男
+    - 男性
+    - 男客户
+    - 男性客户
+
+  female_customer:
+    - 女
+    - 女性
+    - 女客户
+    - 女性客户
+
+  normal_customer:
+    - 正常客户
+    - 正常状态客户
+    - 正常
+
+  closed_customer:
+    - 销户客户
+    - 已销户客户
+    - 销户
+
+  dormant_customer:
+    - 休眠客户
+    - 休眠已确认客户
+    - 休眠已确认
+
+  bachelor_or_above:
+    - 本科及以上
+    - 本科以上
+    - 学士及以上
+    - 学士以上
+    - 本科及以上学历
+
+  stock_product:
+    - 股票
+    - 股票产品
+    - 股票类产品
+
+  fund_product:
+    - 基金
+    - 开放式基金
+    - 基金产品
+    - 基金类产品
+
+  bond_product:
+    - 债券
+    - 债券产品
+    - 债券类产品
+
+  wealth_management_product:
+    - 理财
+    - 理财产品
+    - 理财类产品
+
+  private_fund_product:
+    - 私募
+    - 私募基金
+    - 证券投资类私募
+    - 私募产品
+
+  normal_account:
+    - 普通账户
+    - 普通账号
+    - 普通证券账户
+
+  credit_account:
+    - 信用账户
+    - 信用账号
+    - 融资融券账户
+
+  province_dimension:
+    - 省份
+    - 所在省份
+    - 客户省份
+
+  city_dimension:
+    - 城市
+    - 所在城市
+    - 客户城市
+
+  branch_dimension:
+    - 营业部
+    - 所属营业部
+    - 客户营业部
+
+  parent_branch_dimension:
+    - 分公司
+    - 上级机构
+    - 上级营业部
+
+  repo_product:
+    - 回购
+    - 回购产品
+    - 回购类产品
+
+  cash_product:
+    - 现金类
+    - 现金类产品
+    - 现金产品
+
+  precious_metal_product:
+    - 贵金属
+    - 贵金属产品
+
+  a_share_product:
+    - A股
+    - A股股票
+    - A股产品
+
+  product_entity:
+    - 产品
+    - 产品名称
+    - 证券产品
+
+  branch_entity:
+    - 某营业部
+    - 营业部名称
+    - 具体营业部
+
+  customer_entity:
+    - 客户号
+    - 客户ID
+    - 指定客户

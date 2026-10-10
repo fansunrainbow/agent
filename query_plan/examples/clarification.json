@@ -1,0 +1,86 @@
+{
+  "version": "1.0",
+  "status": "needs_clarification",
+  "intent": "customer_selection",
+  "subject": "customer",
+
+  "metrics": [],
+
+  "dimensions": [],
+
+  "filters": [],
+
+  "entities": [],
+
+  "time_range": null,
+
+  "group_by": [],
+
+  "having": [],
+
+  "order_by": [],
+
+  "limit": null,
+
+  "output": {
+    "mode": "detail",
+    "format": "table",
+    "include_details": true,
+    "include_explanation": true
+  },
+
+  "ambiguities": [
+    {
+      "term": "近期",
+      "type": "time",
+      "reason": "未指定明确时间范围。",
+      "question": "你希望将“近期”定义为最近7天、最近30天、最近3个月，还是其他时间范围？",
+      "candidates": [
+        "last_7_days",
+        "last_30_days",
+        "last_3_months",
+        "custom_range"
+      ]
+    },
+    {
+      "term": "活跃",
+      "type": "business_rule",
+      "reason": "“活跃”可能按交易次数、交易金额或最近交易时间定义。",
+      "question": "你希望按交易次数、交易金额，还是最近交易时间定义“活跃”？",
+      "candidates": [
+        "trade_count",
+        "trade_amount",
+        "recent_transaction"
+      ]
+    },
+    {
+      "term": "优质客户",
+      "type": "business_rule",
+      "reason": "“优质客户”缺少统一固定业务口径。",
+      "question": "你希望按客户等级、资产规模、交易活跃度，还是综合经营规则定义“优质客户”？",
+      "candidates": [
+        "customer_level",
+        "average_total_asset",
+        "trading_activity",
+        "composite_business_rule"
+      ]
+    }
+  ],
+
+  "assumptions": [],
+
+  "confidence": {
+    "overall": 0.5,
+    "intent": 0.95,
+    "metrics": 0.5,
+    "dimensions": 1.0,
+    "entities": 1.0,
+    "time": 0.4,
+    "filters": 0.4
+  },
+
+  "context": {
+    "parent_plan_id": null,
+    "operation": "new"
+  }
+}

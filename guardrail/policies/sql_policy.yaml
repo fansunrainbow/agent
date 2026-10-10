@@ -1,0 +1,10 @@
+allowed_statements: [SELECT]
+forbidden_keywords: [INSERT, UPDATE, DELETE, DROP, ALTER, TRUNCATE, CREATE, REPLACE, MERGE, CALL, GRANT, REVOKE, LOAD, INTO, OUTFILE]
+allowed_functions: [AVG, COALESCE, CONCAT, COUNT, DATE_FORMAT, MAX, MIN, NULLIF, QUARTER, STR_TO_DATE, SUM, SUBSTRING]
+allow_comments: false
+allow_multiple_statements: false
+allow_wildcard: false
+allow_string_literals: false
+allowed_numeric_literals: [0]
+parameter_style: named
+max_repair_attempts: 1

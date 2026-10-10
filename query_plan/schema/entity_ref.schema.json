@@ -1,0 +1,168 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "entity_ref.schema.json",
+  "title": "Entity Reference Schema",
+  "description": "Generic Query Plan 中动态实体解析结果的统一结构。",
+  "type": "object",
+
+  "properties": {
+    "entity_type": {
+      "type": "string",
+      "enum": [
+        "product",
+        "branch",
+        "parent_branch",
+        "customer",
+        "product_category"
+      ]
+    },
+
+    "surface": {
+      "type": "string",
+      "minLength": 1,
+      "description": "用户自然语言中原始出现的实体文本。"
+    },
+
+    "resolution_status": {
+      "type": "string",
+      "enum": [
+        "resolved",
+        "ambiguous",
+        "not_found"
+      ]
+    },
+
+    "resolved": {
+      "type": ["object", "null"],
+      "properties": {
+        "id": {
+          "type": ["string", "number"]
+        },
+
+        "name": {
+          "type": "string"
+        },
+
+        "entity_type": {
+          "type": "string"
+        },
+
+        "attributes": {
+          "type": "object",
+          "additionalProperties": true
+        }
+      },
+      "required": [
+        "id",
+        "name"
+      ],
+      "additionalProperties": false
+    },
+
+    "candidates": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": ["string", "number"]
+          },
+
+          "name": {
+            "type": "string"
+          },
+
+          "score": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1
+          },
+
+          "attributes": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "required": [
+          "id",
+          "name"
+        ],
+        "additionalProperties": false
+      }
+    },
+
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+
+    "source": {
+      "type": "string",
+      "enum": [
+        "exact_match",
+        "fuzzy_match",
+        "context",
+        "manual_confirmation"
+      ]
+    }
+  },
+
+  "required": [
+    "entity_type",
+    "surface",
+    "resolution_status"
+  ],
+
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "resolution_status": {
+            "const": "resolved"
+          }
+        },
+        "required": [
+          "resolution_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "resolved",
+          "confidence",
+          "source"
+        ],
+        "properties": {
+          "resolved": {
+            "type": "object"
+          }
+        }
+      }
+    },
+
+    {
+      "if": {
+        "properties": {
+          "resolution_status": {
+            "const": "ambiguous"
+          }
+        },
+        "required": [
+          "resolution_status"
+        ]
+      },
+      "then": {
+        "required": [
+          "candidates"
+        ],
+        "properties": {
+          "candidates": {
+            "minItems": 2
+          }
+        }
+      }
+    }
+  ],
+
+  "additionalProperties": false
+}

@@ -1,0 +1,319 @@
+constraints:
+
+  average_total_asset:
+    required_time_range: true
+    required_calendar_day_count: true
+    behavior_if_missing: reject
+    reason: >
+      日均资产采用官方 Q&A 标准口径，
+      需要使用统计期间资产累计值除以该期间自然日天数，
+      因此必须明确统计期间。
+
+  observed_average_total_asset:
+    required_time_range: true
+    behavior_if_missing: reject
+    reason: >
+      有效快照日均资产仅对统计期间实际存在的资产快照求平均，
+      因此同样必须明确统计期间。
+
+  period_start_asset:
+    required_time_range: true
+    behavior_if_missing: reject
+    reason: >
+      期初资产必须基于明确统计期间，
+      才能确定首个有效资产快照。
+
+  period_end_asset:
+    required_time_range: true
+    behavior_if_missing: reject
+    reason: >
+      期末资产必须基于明确统计期间，
+      才能确定最后有效资产快照。
+
+  asset_change:
+    required_time_range: true
+    behavior_if_missing: reject
+    reason: >
+      资产变化额依赖期初资产和期末资产，
+      因此必须指定统计期间。
+
+  asset_change_rate:
+    required_time_range: true
+
+    denominator_zero:
+      behavior: null
+      reason: >
+        当期初资产为 0 时，
+        资产变化率没有有效数学定义。
+
+  cash_asset_ratio:
+    denominator_zero:
+      behavior: null
+      reason: >
+        当客户总资产为 0 时，
+        现金资产占比不计算。
+
+  stock_holding_ratio:
+    denominator_zero:
+      behavior: null
+      reason: >
+        当客户总持仓市值为 0 时，
+        股票持仓占比不计算。
+
+  fund_holding_ratio:
+    denominator_zero:
+      behavior: null
+      reason: >
+        当客户总持仓市值为 0 时，
+        基金持仓占比不计算。
+
+  bond_holding_ratio:
+    denominator_zero:
+      behavior: null
+      reason: >
+        当客户总持仓市值为 0 时，
+        债券持仓占比不计算。
+
+  wealth_management_holding_ratio:
+    denominator_zero:
+      behavior: null
+      reason: >
+        当客户总持仓市值为 0 时，
+        理财产品持仓占比不计算。
+
+
+global_rules:
+
+
+  average_asset_semantics:
+    default_metric: average_total_asset
+    default_behavior: calendar_day_average
+    benchmark_alignment: official_qa
+    alternative_metric: observed_average_total_asset
+    description: >
+      自然语言中的“日均资产”默认映射到 average_total_asset，
+      按统计期间自然日天数计算。
+      若明确要求仅对已有资产记录求平均，则使用
+      observed_average_total_asset。
+
+  null_handling:
+    numeric_fact_fields:
+      default_behavior: treat_as_zero
+      reason: >
+        对金额、次数、市值等事实字段计算时，
+        使用 COALESCE(field, 0) 避免 NULL 影响结果。
+
+    dimension_fields:
+      default_behavior: preserve_null
+      reason: >
+        维度字段缺失时不应自动转换为其他业务含义。
+
+  ratio_metrics:
+    denominator_zero_behavior: null
+    reason: >
+      所有比例类指标在分母为 0 时统一返回 NULL，
+      不返回 0，也不抛出除零错误。
+
+  snapshot_metrics:
+    period_aggregation_rules:
+      point_in_time: latest
+      average: avg
+      start_of_period: first
+      end_of_period: last
+
+    reason: >
+      快照类指标不能在时间范围内直接简单 SUM，
+      必须根据用户问题选择时点、均值、期初或期末语义。
+
+  flow_metrics:
+    period_aggregation: sum
+    reason: >
+      交易金额、交易次数和资金流等流量指标，
+      在指定时间范围内默认按 SUM 聚合。
+
+  product_category_filtering:
+    preferred_field: up_prdt_type_name
+    avoid_field: up_prdt_type_id
+    reason: >
+      当前 dim_product 数据中存在部分产品分类 ID
+      对应多个分类名称的情况，因此产品大类筛选优先使用
+      up_prdt_type_name，而不直接依赖 up_prdt_type_id。
+
+  customer_snapshot_usage:
+    source_table: ads_cust_info_d
+    snapshot_date: "20260531"
+    rule: >
+      客户属性为 2026-05-31 快照。
+      不得把该快照中的客户等级、状态、年龄等属性
+      解释为 2026 年第一季度对应日期的历史属性。
+
+  branch_snapshot_usage:
+    source_table: dim_branch
+    snapshot_date: "20260531"
+    rule: >
+      营业部维度为 2026-05-31 快照。
+      与历史事实数据关联时，只能解释为当前机构归属信息，
+      不应默认解释为历史时点机构归属。
+time_rules:
+
+  date_format:
+    source_format: YYYYMMDD
+    description: >
+      当前事实表中的 data_dt 使用 YYYYMMDD 格式保存。
+
+  Q1:
+    name: 第一季度
+    start_month: 1
+    end_month: 3
+    aliases:
+      - Q1
+      - 一季度
+      - 第一季度
+
+  Q2:
+    name: 第二季度
+    start_month: 4
+    end_month: 6
+    aliases:
+      - Q2
+      - 二季度
+      - 第二季度
+
+  Q3:
+    name: 第三季度
+    start_month: 7
+    end_month: 9
+    aliases:
+      - Q3
+      - 三季度
+      - 第三季度
+
+  Q4:
+    name: 第四季度
+    start_month: 10
+    end_month: 12
+    aliases:
+      - Q4
+      - 四季度
+      - 第四季度
+
+  YTD:
+    name: 年初至今
+    type: relative_period
+    start: start_of_year
+    end: reference_date
+    aliases:
+      - YTD
+      - 年初至今
+      - 本年至今
+
+  last_7_days:
+    name: 最近7天
+    type: rolling_window
+    days: 7
+    aliases:
+      - 最近7天
+      - 近7天
+      - 过去7天
+
+  last_30_days:
+    name: 最近30天
+    type: rolling_window
+    days: 30
+    aliases:
+      - 最近30天
+      - 近30天
+      - 过去30天
+
+  last_3_months:
+    name: 最近3个月
+    type: rolling_window
+    months: 3
+    aliases:
+      - 最近3个月
+      - 近3个月
+      - 过去3个月
+
+  start_of_period:
+    name: 期初
+    type: period_boundary
+    behavior: first_available_snapshot
+    description: >
+      在指定统计期间内，取该期间实际存在的最早有效快照记录。
+
+  end_of_period:
+    name: 期末
+    type: period_boundary
+    behavior: last_available_snapshot
+    description: >
+      在指定统计期间内，取该期间实际存在的最后有效快照记录。
+
+  current:
+    name: 当前
+    type: semantic
+    behavior: latest_available_snapshot
+    description: >
+      对快照类指标，“当前”表示数据中最新可用快照，
+      不默认等于系统自然日当天。
+
+  today:
+    name: 今日
+    type: semantic
+    behavior: exact_date_if_available
+    description: >
+      “今日”优先解析为查询参考日期当天。
+      如果数据集没有当天记录，不应自动伪造数据。
+
+  asset_fact_available_range:
+    source_table: dws_cust_aset_d
+    start_date: "20260101"
+    end_date: "20260331"
+
+  fund_flow_fact_available_range:
+    source_table: dws_cust_fin_d
+    start_date: "20260105"
+    end_date: "20260331"
+
+  transaction_fact_available_range:
+    source_table: dwd_cust_tran_d
+    start_date: "20260105"
+    end_date: "20260331"
+
+  holding_fact_available_range:
+    source_table: dwd_cust_hold_d
+    start_date: "20260101"
+    end_date: "20260331"
+
+  snapshot_attribute_rule:
+    customer_snapshot_date: "20260531"
+    branch_snapshot_date: "20260531"
+    description: >
+      客户属性和营业部属性是 2026-05-31 快照。
+      与 2026 年第一季度事实数据联合使用时，
+      不得将这些属性解释为第一季度历史时点属性。
+
+
+  asset_profit:
+    required_time_range: true
+    behavior_if_missing: reject
+    reason: >
+      资产盈亏依赖期初资产、期末资产以及期间资金流，
+      因此必须明确统计期间。
+
+    missing_fund_flow:
+      behavior: treat_as_zero
+      reason: >
+        若客户在统计期间没有资金流记录，
+        则期间流入和流出按 0 处理。
+
+    start_snapshot:
+      behavior: first_available_snapshot
+      reason: >
+        若精确期初日不存在资产记录，
+        使用统计期间内首个有效资产快照。
+
+    end_snapshot:
+      behavior: last_available_snapshot
+      reason: >
+        若精确期末日不存在资产记录，
+        使用统计期间内最后有效资产快照。

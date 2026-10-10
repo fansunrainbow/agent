@@ -1,0 +1,157 @@
+version: "1.0"
+dataset_status: frozen
+dataset_case_count: 226
+policy:
+  raw_score_unchanged: true
+  confirmed_only_affects_adjudicated_score: true
+  pending_human_does_not_receive_credit: true
+
+metadata_contract_corrections:
+  - id: METRIC_REQUIRED_TIME_SYNC
+    files:
+      authority: metadata/metric_constraints.yaml
+      corrected: metadata/metrics.yaml
+    metrics: [period_start_asset, period_end_asset, asset_change, asset_change_rate]
+    evidence: Existing metric contract declares required_time_range=true, while the runtime registry omitted it.
+    decision: Synchronize the same constraint into the runtime metric registry.
+    review_status: confirmed
+
+adjudications:
+  - &mx_policy
+    case_id: GEN_MX100
+    original_expected: {status: ready, time_range: 2026-Q1}
+    system_actual: {status: needs_clarification, time_range: null}
+    conflict_type: GOLD_POLICY_CONFLICT
+    evidence: Query contains no time; metric contract requires time and forbids inventing 2026-Q1.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - <<: *mx_policy
+    case_id: GEN_MX101
+  - <<: *mx_policy
+    case_id: GEN_MX102
+  - <<: *mx_policy
+    case_id: GEN_MX103
+  - <<: *mx_policy
+    case_id: GEN_MX104
+  - <<: *mx_policy
+    case_id: GEN_MX105
+  - <<: *mx_policy
+    case_id: GEN_MX106
+  - <<: *mx_policy
+    case_id: GEN_MX107
+  - <<: *mx_policy
+    case_id: GEN_MX108
+  - <<: *mx_policy
+    case_id: GEN_MX109
+  - <<: *mx_policy
+    case_id: GEN_MX110
+  - <<: *mx_policy
+    case_id: GEN_MX111
+  - <<: *mx_policy
+    case_id: GEN_MX112
+  - <<: *mx_policy
+    case_id: GEN_MX113
+  - <<: *mx_policy
+    case_id: GEN_MX114
+  - <<: *mx_policy
+    case_id: GEN_MX115
+  - <<: *mx_policy
+    case_id: GEN_MX116
+  - <<: *mx_policy
+    case_id: GEN_MX117
+  - <<: *mx_policy
+    case_id: GEN_MX118
+  - <<: *mx_policy
+    case_id: GEN_MX119
+  - <<: *mx_policy
+    case_id: GEN_MX120
+
+  - &yearless_q1
+    case_id: PLAN_C004
+    original_expected: {status: ready, time_range: 2026-Q1}
+    system_actual: {status: needs_clarification, time_range: null}
+    conflict_type: GOLD_POLICY_CONFLICT
+    evidence: Query says Q1 without a year or reference date; TimeParser correctly refuses to infer 2026.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - <<: *yearless_q1
+    case_id: PLAN_C005
+  - <<: *yearless_q1
+    case_id: PLAN_C012
+  - <<: *yearless_q1
+    case_id: PLAN_C015
+  - <<: *yearless_q1
+    case_id: PLAN_C019
+  - <<: *yearless_q1
+    case_id: PLAN_C006
+    decision: RETAIN_FAILURE
+    evidence: Gold invents 2026-Q1, but the actual plan also has an independent filter-logic defect.
+  - <<: *yearless_q1
+    case_id: PLAN_C011
+    decision: RETAIN_FAILURE
+    evidence: Gold invents 2026-Q1, but the actual plan also has independent intent/filter defects.
+
+  - case_id: SEM_E001
+    original_expected: {entity_id: P_GZM, status: ready}
+    system_actual: {entity_id: "9900269727", status: ready}
+    conflict_type: SYNTHETIC_ENTITY_CONFLICT
+    evidence: P_GZM is absent from project CSV registries; dim_product contains the resolved real product ID 9900269727.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - case_id: SEM_E004
+    original_expected: {entity_id: B_NJ001, status: ready}
+    system_actual: {entity_id: null, status: needs_clarification}
+    conflict_type: SYNTHETIC_ENTITY_CONFLICT
+    evidence: B_NJ001 and 南京中心营业部 are absent from the real branch registry.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - case_id: SEM_E005
+    original_expected: {entity_id: PB_JS, status: ready}
+    system_actual: {entity_id: null, status: needs_clarification}
+    conflict_type: SYNTHETIC_ENTITY_CONFLICT
+    evidence: PB_JS is absent from project CSV registries; the system does not manufacture parent-branch IDs.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - case_id: SEM_E006
+    original_expected: {entity_id: C00000000000169, intent: customer_profile, status: ready}
+    system_actual: {entity_id: null, status: needs_clarification}
+    conflict_type: SYNTHETIC_ENTITY_CONFLICT
+    evidence: Query contains no customer identifier and the expected ID is absent from the real customer snapshot.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - case_id: SEM_E009
+    original_expected: {entity_id: CAT_FUND, status: ready}
+    system_actual: {entity_id: 开放式基金, status: ready}
+    conflict_type: SYNTHETIC_ENTITY_CONFLICT
+    evidence: CAT_FUND is absent from real data; 开放式基金 is the registered category representation.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+
+  - &unsupported_boundary
+    case_id: E2E_CLARIFY_003
+    original_expected: {status: needs_clarification}
+    system_actual: {status: unsupported}
+    conflict_type: GOLD_POLICY_CONFLICT
+    evidence: Unsupported registered-boundary requests are safely rejected; unsupported is stricter than clarification and does not execute.
+    decision: ADJUDICATE_AS_PASS
+    review_status: confirmed
+  - <<: *unsupported_boundary
+    case_id: E2E_CLARIFY_006
+  - <<: *unsupported_boundary
+    case_id: E2E_CLARIFY_007
+
+  - case_id: MT_002
+    original_expected: {gender: F}
+    system_actual: {gender: 女}
+    conflict_type: ENUM_REPRESENTATION_CONFLICT
+    evidence: dim_public and value_mappings define 5000003=女; no production mapping from F to 女 exists.
+    decision: PENDING_HUMAN_REVIEW
+    review_status: pending_human
+  - case_id: MT_009
+    original_expected: {customer_level: "1000003"}
+    system_actual: {customer_level: "1000001", status: ready}
+    conflict_type: GOLD_DATA_CONFLICT
+    evidence: dim_public and value_mappings define 1000003=金卡客户, not 普通客户.
+    decision: RETAIN_FAILURE
+    review_status: confirmed
+    note: Gold is invalid, but silently retaining the previous diamond level is also a real system defect.

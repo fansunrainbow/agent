@@ -1,0 +1,5 @@
+require_registered_tables: true
+require_registered_columns: true
+require_verified_joins: true
+allow_direct_fact_to_fact_join: false
+allow_preaggregated_cte_join_on: [pty_id, prdt_id, org_id]

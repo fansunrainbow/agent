@@ -1,0 +1,45 @@
+expansions:
+  stock_product:
+    concept_id: stock_product
+    concept_type: category
+    target_type: dimension_filter
+    target_dimension: product_primary_category
+    operator: eq
+    canonical_value: 股票
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+      hierarchy_level: primary
+      verified_from: real_db
+    version: "1.0"
+    enabled: true
+
+  fund_product:
+    concept_id: fund_product
+    concept_type: category
+    target_type: dimension_filter
+    target_dimension: product_primary_category
+    operator: eq
+    canonical_value: 开放式基金
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+      hierarchy_level: primary
+      verified_from: real_db
+    version: "1.0"
+    enabled: true
+
+  bond_product:
+    concept_id: bond_product
+    concept_type: category
+    target_type: dimension_filter
+    target_dimension: product_primary_category
+    operator: eq
+    canonical_value: 债券
+    source:
+      table: dim_product
+      field: up_prdt_type_name
+      hierarchy_level: primary
+      verified_from: real_db
+    version: "1.0"
+    enabled: true

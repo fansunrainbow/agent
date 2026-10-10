@@ -1,0 +1,196 @@
+entities:
+
+  product:
+    name: 产品
+    source_table: dim_product
+
+    search_fields:
+      - prdt_name
+      - prdt_id
+      - sor_prdt_id
+
+    return_fields:
+      - prdt_id
+      - prdt_name
+      - sor_prdt_id
+      - market_id
+      - prdt_type_id
+      - prdt_type_name
+      - up_prdt_type_id
+      - up_prdt_type_name
+
+    matching:
+      exact_match_first: true
+      fuzzy_match: true
+      case_sensitive: false
+      max_candidates: 10
+
+    ambiguity:
+      require_exact_match_if_multiple: true
+      clarification_required_if_multiple: true
+
+    examples:
+      - 招商银行
+      - 比亚迪
+      - 中国平安
+
+    explain:
+      text: >
+        具体产品名称通过 dim_product 进行实体检索。
+        优先精确匹配 prdt_name；若无精确结果，可进行模糊搜索。
+        若存在多个候选产品，则需要进一步确认，不能直接猜测产品 ID。
+
+
+  branch:
+    name: 营业部
+    source_table: dim_branch
+
+    search_fields:
+      - org_name
+      - org_id
+
+    return_fields:
+      - org_id
+      - org_name
+      - up_org_id
+      - up_org_name
+
+    matching:
+      exact_match_first: true
+      fuzzy_match: true
+      case_sensitive: false
+      max_candidates: 10
+
+    ambiguity:
+      require_exact_match_if_multiple: true
+      clarification_required_if_multiple: true
+
+    examples:
+      - 某营业部
+      - 南京某营业部
+
+    explain:
+      text: >
+        具体营业部通过 dim_branch 中的 org_name 或 org_id 进行实体解析。
+        若模糊匹配返回多个营业部，应要求进一步确认。
+
+
+  parent_branch:
+    name: 分公司
+    source_table: dim_branch
+
+    search_fields:
+      - up_org_name
+      - up_org_id
+
+    return_fields:
+      - up_org_id
+      - up_org_name
+
+    matching:
+      exact_match_first: true
+      fuzzy_match: true
+      case_sensitive: false
+      max_candidates: 10
+
+    ambiguity:
+      require_exact_match_if_multiple: true
+      clarification_required_if_multiple: true
+
+    explain:
+      text: >
+        分公司通过 dim_branch 的上级机构名称或上级机构 ID 进行解析。
+
+
+  customer:
+    name: 客户
+    source_table: ads_cust_info_d
+
+    search_fields:
+      - pty_id
+      - sor_pty_id
+      - name
+
+    return_fields:
+      - pty_id
+      - sor_pty_id
+      - name
+      - cust_lvl_cd
+      - cust_status
+      - org_id
+
+    matching:
+      exact_match_first: true
+      fuzzy_match: false
+      case_sensitive: false
+      max_candidates: 10
+
+    ambiguity:
+      require_exact_match_if_multiple: true
+      clarification_required_if_multiple: true
+
+    explain:
+      text: >
+        客户实体优先通过 pty_id 或 sor_pty_id 精确解析。
+        客户姓名可能存在重名，因此不允许仅凭姓名自动确定唯一客户。
+
+
+  product_category:
+    name: 产品类别
+    source_table: dim_product
+
+    search_fields:
+      - up_prdt_type_name
+      - prdt_type_name
+
+    return_fields:
+      - up_prdt_type_name
+      - prdt_type_name
+
+    matching:
+      exact_match_first: true
+      fuzzy_match: true
+      case_sensitive: false
+      max_candidates: 20
+
+    ambiguity:
+      clarification_required_if_multiple: true
+
+    explain:
+      text: >
+        产品类别可以通过一级分类名称或二级分类名称进行解析。
+        当前产品分类 ID 存在一对多名称情况，因此优先使用名称字段。
+
+
+global_entity_rules:
+
+  exact_match_priority:
+    enabled: true
+    reason: >
+      实体解析优先采用精确匹配，避免模糊匹配错误地选择相似实体。
+
+  fuzzy_match:
+    enabled_for:
+      - product
+      - branch
+      - parent_branch
+      - product_category
+
+    disabled_for:
+      - customer
+
+    reason: >
+      产品和机构名称可以允许有限模糊匹配；
+      客户实体涉及唯一身份，不允许仅依赖模糊匹配自动确认。
+
+  multiple_candidates:
+    behavior: clarify
+    reason: >
+      当实体检索返回多个可能候选时，
+      不允许 Agent 自行猜测，必须要求用户进一步确认。
+
+  no_candidate:
+    behavior: report_not_found
+    reason: >
+      当数据库中不存在匹配实体时，
+      应明确告知未找到，而不是生成不存在的实体 ID。

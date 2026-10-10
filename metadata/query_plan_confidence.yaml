@@ -1,0 +1,39 @@
+confidence_policy:
+  execute_threshold: 0.85
+  clarification_threshold: 0.60
+
+  critical_components:
+    - intent
+    - metrics
+    - dimensions
+    - entities
+    - time
+    - filters
+
+  signals:
+    exact_dictionary_match:
+      confidence: 1.0
+
+    exact_entity_match:
+      confidence: 0.95
+
+    fuzzy_entity_match:
+      confidence_range:
+        - 0.70
+        - 0.90
+
+    context_resolution:
+      confidence_range:
+        - 0.70
+        - 0.95
+
+    llm_only_inference:
+      confidence_range:
+        - 0.50
+        - 0.80
+
+  behavior:
+    ready_below_execute_threshold: reject
+    unresolved_critical_component: clarify
+    missing_confidence: reject
+

@@ -1,0 +1,81 @@
+opportunities:
+  fund_allocation_opportunity:
+    name: 基金配置沟通机会
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    priority: high
+    defaults: {asset_threshold: 1000000, fund_ratio_threshold: 0.1}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: average_total_asset, operator: gte, parameter: asset_threshold}
+        - {feature: fund_holding_ratio, operator: lt, parameter: fund_ratio_threshold}
+    evidence: [average_total_asset, fund_holding_ratio]
+    explanation_template: "高资产且基金配置低，可开展基金类别配置沟通。"
+  cash_allocation_opportunity:
+    name: 现金配置沟通机会
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    priority: medium
+    defaults: {cash_ratio_threshold: 0.5, wealth_ratio_threshold: 0.1}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: cash_asset_ratio, operator: gte, parameter: cash_ratio_threshold}
+        - {feature: wealth_management_holding_ratio, operator: lt, parameter: wealth_ratio_threshold}
+    evidence: [cash_asset_ratio, wealth_management_holding_ratio]
+    explanation_template: "现金占比较高且理财类配置较低，可开展资产配置沟通。"
+  active_concentrated_trading:
+    name: 活跃且配置集中沟通机会
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    priority: medium
+    defaults: {trade_threshold: 20, stock_ratio_threshold: 0.8}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: trade_count, operator: gte, parameter: trade_threshold}
+        - {feature: stock_holding_ratio, operator: gte, parameter: stock_ratio_threshold}
+    evidence: [trade_count, stock_holding_ratio]
+    explanation_template: "交易活跃且股票配置集中，可开展产品结构沟通。"
+  high_level_outflow_attention:
+    name: 高等级客户资金流出关注
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    priority: high
+    defaults: {high_level_values: ["1000001", "1000002"], outflow_threshold: 0}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: customer_level, operator: in, parameter: high_level_values}
+        - {feature: net_inflow, operator: lt, parameter: outflow_threshold}
+    evidence: [customer_level, net_inflow]
+    explanation_template: "高等级客户出现净流出，应作为经营关注对象。"
+  asset_decline_outflow_attention:
+    name: 资产下降与资金流出关注
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: internal_config
+    priority: high
+    defaults: {decline_threshold: 0, outflow_threshold: 0}
+    condition:
+      logic: AND
+      conditions:
+        - {feature: asset_change_rate, operator: lt, parameter: decline_threshold}
+        - {feature: net_inflow, operator: lt, parameter: outflow_threshold}
+    evidence: [asset_change_rate, net_inflow]
+    explanation_template: "资产下降且资金净流出，需要核实客户经营情况。"
+  large_recent_inflow_followup:
+    name: 近期大额流入跟进
+    version: "1.0"
+    effective_from: "2026-01-01"
+    source: business_policy
+    priority: medium
+    defaults: {inflow_threshold: 500000}
+    condition: {feature: net_inflow, operator: gte, parameter: inflow_threshold}
+    evidence: [net_inflow]
+    explanation_template: "近期净流入达到规则阈值，可进行资金到位后的经营跟进。"

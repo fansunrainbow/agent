@@ -1,0 +1,337 @@
+segments:
+
+  high_asset_customer:
+    name: 高资产客户
+    category: derived_segment
+
+    conditions:
+      - metric: average_total_asset
+        operator: ">="
+        parameter: threshold
+
+    default_threshold: 1000000
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 高资产客户
+      - 高资产客群
+      - 资产较高客户
+
+    explain:
+      text: >
+        高资产客户指指定统计期间内日均资产达到设定阈值的客户。
+        当前默认阈值为 100 万元，但该阈值属于业务参数，
+        后续可以由业务人员配置。
+      source: configurable_business_rule
+
+
+  high_cash_customer:
+    name: 高现金客户
+    category: derived_segment
+
+    conditions:
+      - metric: cash_asset_ratio
+        operator: ">="
+        parameter: ratio_threshold
+
+    default_ratio_threshold: 0.5
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 高现金客户
+      - 现金占比较高客户
+      - 高现金配置客户
+
+    explain:
+      text: >
+        高现金客户指现金资产占总资产比例达到设定阈值的客户。
+        当前阈值仅作为默认参数，不视为官方固定业务定义。
+      source: configurable_business_rule
+
+
+  asset_growth_customer:
+    name: 资产增长客户
+    category: derived_segment
+
+    conditions:
+      - metric: asset_change
+        operator: ">"
+        value: 0
+
+    configurable: false
+
+    aliases:
+      - 资产增长客户
+      - 资产增加客户
+      - 资产上升客户
+      - 资产增长
+      - 资产增加
+      - 资产上升
+
+    explain:
+      text: >
+        资产增长客户指指定统计期间内资产变化额大于 0 的客户。
+      source: metric_rule
+
+
+  asset_decline_customer:
+    name: 资产下降客户
+    category: derived_segment
+
+    conditions:
+      - metric: asset_change
+        operator: "<"
+        value: 0
+
+    configurable: false
+
+    aliases:
+      - 资产下降客户
+      - 资产减少客户
+      - 资产下滑客户
+      - 资产下降
+      - 资产减少
+      - 资产下滑
+
+    explain:
+      text: >
+        资产下降客户指指定统计期间内资产变化额小于 0 的客户。
+      source: metric_rule
+
+
+  active_trading_customer:
+    name: 交易活跃客户
+    category: derived_segment
+
+    conditions:
+      - metric: trade_count
+        operator: ">="
+        parameter: trade_count_threshold
+
+    default_trade_count_threshold: 20
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 交易活跃客户
+      - 活跃交易客户
+      - 高频交易客户
+
+    explain:
+      text: >
+        交易活跃客户指统计期间内交易次数达到设定阈值的客户。
+        当前默认阈值为 20 次，实际业务中可配置。
+      source: configurable_business_rule
+
+
+  low_activity_customer:
+    name: 低活跃客户
+    category: derived_segment
+
+    conditions:
+      - metric: trade_count
+        operator: "<"
+        parameter: trade_count_threshold
+
+    default_trade_count_threshold: 5
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 低活跃客户
+      - 交易不活跃客户
+      - 低频交易客户
+
+    explain:
+      text: >
+        低活跃客户指统计期间内交易次数低于设定阈值的客户。
+      source: configurable_business_rule
+
+
+  recent_trading_customer:
+    name: 近期交易客户
+    category: derived_segment
+
+    conditions:
+      - dimension: date
+        operator: ">="
+        parameter: recent_start_date
+
+    configurable: true
+    requires_time_context: true
+
+    aliases:
+      - 近期交易客户
+      - 最近交易客户
+      - 近期有交易客户
+
+    explain:
+      text: >
+        近期交易客户依赖“近期”的具体时间范围，
+        必须由上下文或用户明确时间窗口。
+      source: contextual_business_rule
+
+
+  net_inflow_customer:
+    name: 净流入客户
+    category: derived_segment
+
+    conditions:
+      - metric: net_inflow
+        operator: ">"
+        value: 0
+
+    configurable: false
+
+    aliases:
+      - 净流入客户
+      - 资金净流入客户
+      - 净流入
+      - 资金净流入
+
+    explain:
+      text: >
+        净流入客户指指定统计期间内净流入金额大于 0 的客户。
+      source: metric_rule
+
+
+  net_outflow_customer:
+    name: 净流出客户
+    category: derived_segment
+
+    conditions:
+      - metric: net_inflow
+        operator: "<"
+        value: 0
+
+    configurable: false
+
+    aliases:
+      - 净流出客户
+      - 资金净流出客户
+      - 净流出
+      - 资金净流出
+
+    explain:
+      text: >
+        净流出客户指指定统计期间内净流入金额小于 0 的客户。
+      source: metric_rule
+
+
+  large_inflow_customer:
+    name: 大额流入客户
+    category: derived_segment
+
+    conditions:
+      - metric: total_inflow
+        operator: ">="
+        parameter: inflow_threshold
+
+    default_inflow_threshold: 100000
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 大额流入客户
+      - 大额资金流入客户
+
+    explain:
+      text: >
+        大额流入客户指统计期间内总流入达到设定阈值的客户。
+        阈值应按具体业务场景配置。
+      source: configurable_business_rule
+
+
+  large_outflow_customer:
+    name: 大额流出客户
+    category: derived_segment
+
+    conditions:
+      - metric: total_outflow
+        operator: ">="
+        parameter: outflow_threshold
+
+    default_outflow_threshold: 100000
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 大额流出客户
+      - 大额资金流出客户
+
+    explain:
+      text: >
+        大额流出客户指统计期间内总流出达到设定阈值的客户。
+      source: configurable_business_rule
+
+
+  low_fund_allocation_customer:
+    name: 基金低配置客户
+    category: derived_segment
+
+    conditions:
+      - metric: fund_holding_ratio
+        operator: "<"
+        parameter: ratio_threshold
+
+    default_ratio_threshold: 0.1
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 基金低配置客户
+      - 基金配置较低客户
+
+    explain:
+      text: >
+        基金低配置客户指基金持仓占比低于设定阈值的客户。
+        默认阈值仅作初始参数。
+      source: configurable_business_rule
+
+
+  high_stock_allocation_customer:
+    name: 股票高配置客户
+    category: derived_segment
+
+    conditions:
+      - metric: stock_holding_ratio
+        operator: ">="
+        parameter: ratio_threshold
+
+    default_ratio_threshold: 0.5
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 股票高配置客户
+      - 股票配置较高客户
+
+    explain:
+      text: >
+        股票高配置客户指股票持仓占比达到设定阈值的客户。
+      source: configurable_business_rule
+
+
+  high_cash_allocation_customer:
+    name: 现金高配置客户
+    category: derived_segment
+
+    conditions:
+      - metric: cash_asset_ratio
+        operator: ">="
+        parameter: ratio_threshold
+
+    default_ratio_threshold: 0.5
+    configurable: true
+    requires_business_confirmation: true
+
+    aliases:
+      - 现金高配置客户
+      - 现金配置较高客户
+
+    explain:
+      text: >
+        现金高配置客户指现金资产占总资产比例达到设定阈值的客户。
+      source: configurable_business_rule
