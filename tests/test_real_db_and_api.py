@@ -83,6 +83,17 @@ def test_health_marks_dry_run_without_credentials(monkeypatch):
     assert payload["raw_sql_api"] is False
 
 
+def test_health_marks_dry_run_when_database_is_unreachable(monkeypatch):
+    for key, value in {"DB_HOST": "127.0.0.1", "DB_NAME": "db", "DB_USER": "reader", "DB_PASSWORD": "example"}.items():
+        monkeypatch.setenv(key, value)
+
+    def fail_connection(_config):
+        raise OSError("database unavailable")
+
+    monkeypatch.setattr("webapp.service.create_readonly_connection", fail_connection)
+    assert health()["mode"] == "DEMO / DRY RUN"
+
+
 def test_application_service_ready_chat_exposes_sql_and_params_separately():
     value = ApplicationService().chat("南京客户有多少？")
     assert value["status"] == "ready"

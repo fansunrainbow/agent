@@ -43,7 +43,16 @@ class ApplicationService:
 
     @staticmethod
     def database_mode() -> str:
-        return "REAL_DB" if all(os.getenv(key) for key in ("DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD")) else "DEMO / DRY RUN"
+        if not all(os.getenv(key) for key in ("DB_HOST", "DB_NAME", "DB_USER", "DB_PASSWORD")):
+            return "DEMO / DRY RUN"
+        try:
+            connection = create_readonly_connection(DatabaseConfig.from_env())
+            try:
+                return "REAL_DB" if connection.capability_check().readonly_verified else "DEMO / DRY RUN"
+            finally:
+                connection.close()
+        except Exception:
+            return "DEMO / DRY RUN"
 
     def chat(self, message: str, conversation_id: str | None = None, execute: bool = False) -> dict[str, Any]:
         conversation_id = conversation_id or uuid4().hex
